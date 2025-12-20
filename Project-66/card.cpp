@@ -1,7 +1,7 @@
 #include "card.h"
 #include <iostream>
 
-const char* getRankString(Rank rank)
+const char* getRankString(const Rank& rank)
 {
 	switch (rank)
 	{
@@ -20,7 +20,7 @@ const char* getRankString(Rank rank)
 	}
 }
 
-const char* getSuitString(Suit suit)
+const char* getSuitString(const Suit& suit)
 {
 	switch (suit)
 	{
@@ -35,16 +35,16 @@ const char* getSuitString(Suit suit)
 	}
 }
 
-void printCard(Card card)
+void printCard(const Card& card)
 {
 	std::cout << getRankString(card.rank) << getSuitString(card.suit);
 }
 
-int compareCards(Card c1, Card c2, Suit trump)
+bool beats(const Card& c1, const Card& c2, const Suit& trump)
 {
-	if (c1.suit == trump && c2.suit != trump) return 1;
-	if (c1.suit != trump && c2.suit == trump) return -1;
+	if (c1.suit == trump && c2.suit != trump) return true;
+	if (c1.suit != trump && c2.suit == trump) return false;
 
-	if (c1.suit == c2.suit)return ((int)c1.rank) > ((int)c2.rank) ? 1 : -1;
-	return 1;
+	if (c1.suit == c2.suit)return ((int)c1.rank) > ((int)c2.rank) ? true : false;
+	return true;
 }

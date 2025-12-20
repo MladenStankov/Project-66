@@ -6,6 +6,7 @@ constexpr char DIAMONDS_SYMBOL[] = "\xE2\x99\xA6";
 constexpr char HEARTS_SYMBOL[] = "\xE2\x99\xA5";
 constexpr char SPADES_SYMBOL[] = "\xE2\x99\xA0";
 
+// Playing cards French-Suit
 enum class Suit {
     CLUBS,
     DIAMONDS,
@@ -13,6 +14,7 @@ enum class Suit {
     SPADES,
 };
 
+// Eligible card ranks for game 66
 enum class Rank {
     NINE = 9,
     TEN = 10,
@@ -27,11 +29,14 @@ struct Card {
     Rank rank;
 };
 
-const char* getRankString(Rank);
-const char* getSuitString(Suit);
+// Returns the string value of the Rank
+const char* getRankString(const Rank&);
+
+// Returns the string Value of the Suit
+const char* getSuitString(const Suit&);
 
 // Prints out to the console the suit and rank of the Card
-void printCard(Card card);
+void printCard(const Card& card);
 
-// Returns 1 if the first Card wins. Otherwise returns -1 if the second Card wins.
-int compareCards(Card c1, Card c2, Suit trump);
+// Returns whether the first Card beats the second Card
+bool beats(const Card& c1, const Card& c2, const Suit& trump);
