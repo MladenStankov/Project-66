@@ -25,7 +25,7 @@ int main()
         }
 
         std::cout << "> ";
-        std::cin >> command;
+        std::cin.getline(command, MAX_COMMAND_LEN);
 
         cleanString(command);
 

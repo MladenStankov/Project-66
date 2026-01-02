@@ -55,3 +55,24 @@ bool beats(const Card& c1, const Card& c2, const Suit& trump)
 	if (c1.suit == c2.suit)return ((int)c1.rank) > ((int)c2.rank) ? true : false;
 	return true;
 }
+
+unsigned int getCardValue(const Card& card)
+{
+	switch (card.rank)
+	{
+		case Rank::NINE:
+			return 0;
+		case Rank::JACK: 
+			return 2;
+		case Rank::QUEEN: 
+			return 3;
+		case Rank::KING:
+			return 4;
+		case Rank::TEN:
+			return 10;
+		case Rank::ACE: 
+			return 11;
+		default:
+			return 0;
+	}
+}

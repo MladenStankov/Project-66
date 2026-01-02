@@ -2,6 +2,7 @@
 #include "utils.h"
 #include "card.h"
 #include "game.h"
+#include "console.h"
 
 void initialDeal(Round& round, Game& game)
 {
@@ -31,11 +32,11 @@ void shuffleDeck(Deck& deck)
 	}
 }
 
-void startRound(Game& game)
+Round& startRound(Game& game)
 {
 	size_t index = 0;
 	size_t roundHistorySize = game.roundsHistory.size;
-	Round currentRound = game.roundsHistory.history[roundHistorySize - 1];
+	Round& currentRound = game.roundsHistory.history[roundHistorySize - 1];
 
 	for (size_t s = 0; s < TOTAL_SUITS; ++s)
 	{
@@ -48,7 +49,7 @@ void startRound(Game& game)
 	}
 	if (roundHistorySize == 1)
 	{
-		unsigned int randomNumber = generateRandomNumber(0, 1);
+		unsigned int randomNumber = generateRandomNumber(0, 2);
 
 		switch (randomNumber)
 		{
@@ -74,6 +75,14 @@ void startRound(Game& game)
 	shuffleDeck(currentRound.deck);
 
 	initialDeal(currentRound, game);
+
+	currentRound.bottomCard = currentRound.deck.cards[currentRound.deck.topCardIndex];
+	currentRound.trump = currentRound.deck.cards[currentRound.deck.topCardIndex].suit;
+
+	// Swap bottom card with the last card so it is drawn last
+	swapCards(currentRound.deck.cards[currentRound.deck.topCardIndex], currentRound.deck.cards[MAX_DECK_SIZE - 1]);
+
+	return currentRound;
 }
 
 void printLastTrick(const Round& round)
@@ -94,5 +103,25 @@ void printLastTrick(const Round& round)
 
 void printTrumpSuit(const Round& round)
 {
-	std::cout << "Trump suit: " << getSuitString(round.trump) << std::endl;
+	std::cout << "Trump suit: ";
+	if (round.trump == Suit::CLUBS || round.trump == Suit::SPADES)
+		setConsoleColor(Color::Gray);
+	else setConsoleColor(Color::Red);
+
+	std::cout << getSuitString(round.trump) << std::endl;
+
+	setConsoleColor(Color::White);
+}
+void printBottomCard(const Round& round)
+{
+	std::cout << "Bottom Card: ";
+	printCard(round.bottomCard);
+	std::cout << std::endl;
+}
+
+void printRoundInfo(const Round& round)
+{
+	printTrumpSuit(round);
+
+	printBottomCard(round);
 }

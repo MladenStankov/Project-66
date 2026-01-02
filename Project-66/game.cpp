@@ -67,7 +67,22 @@ Player& getNonLeadingPlayer(Game& game)
     else return game.player2;
 }
 
+Player& getThePlayerThatIsOnTurn(Game& game)
+{
+    Player& leadingPlayer = getLeadingPlayer(game);
+    if (leadingPlayer.playedThisTurn == false) return leadingPlayer;
+
+    Player& nonLeadingPlayer = getNonLeadingPlayer(game);
+    if (nonLeadingPlayer.playedThisTurn == false) return nonLeadingPlayer;
+}
+
 void changeGameStatus(Game& game, const GameStatus& status)
 {
     game.status = status;
+}
+
+Round& getCurrentRound(Game& game)
+{
+    size_t roundHistorySize = game.roundsHistory.size;
+    return game.roundsHistory.history[roundHistorySize - 1];
 }

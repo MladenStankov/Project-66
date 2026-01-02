@@ -1,7 +1,7 @@
 #pragma once
 #include "card.h"
-#include "player.h"
 #include "round.h"
+#include "player.h"
 
 enum class GameStatus {
 	NOT_STARTED,
@@ -52,3 +52,6 @@ void printRoundsHistory(const Game& game);
 
 Player& getLeadingPlayer(Game& game);
 Player& getNonLeadingPlayer(Game& game);
+Player& getThePlayerThatIsOnTurn(Game& game);
+
+Round& getCurrentRound(Game& game);

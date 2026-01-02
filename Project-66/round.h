@@ -15,7 +15,7 @@ enum class RoundState {
 
 struct Trick {
 	Card leadPlayerCard, otherPlayerCard;
-	Player* leadPlayer, * otherPlayer;
+	Player* leadPlayer = nullptr, *otherPlayer = nullptr;
 	Player* winner;
 };
 
@@ -34,7 +34,7 @@ struct Round {
 	Deck deck;
 	Suit trump;
 	Card bottomCard;
-	Trick lastTrick;
+	Trick lastTrick, currentTrick;
 	RoundState state = RoundState::ONGOING;
 	RoundConclusion conclusion = {};
 };
@@ -42,8 +42,8 @@ struct Round {
 // Functions
 void shuffleDeck(Deck& deck);
 
-void startRound(Game& game);
+Round& startRound(Game& game);
 
 void initialDeal(Round& round, Game& game);
 void printLastTrick(const Round& round);
-void printTrumpSuit(const Round& round);
+void printRoundInfo(const Round& round);

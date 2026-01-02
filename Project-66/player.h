@@ -1,6 +1,10 @@
 #pragma once
 #include "card.h"
 
+struct Round;
+
+struct Game;
+
 constexpr size_t MAX_HAND_SIZE = 6;
 
 struct PlayerHand {
@@ -17,7 +21,7 @@ struct Player
 	unsigned int overallPoints;
 
 	bool isLeading;
-	bool playedThisTrick = false;
+	bool playedThisTurn = false;
 };
 
 Player initPlayer(const char* name);
@@ -25,3 +29,4 @@ Player initPlayer(const char* name);
 void addCardToHand(Player& player, Card card);
 void removeCardFromHand(Player& player, size_t index);
 void printHand(const Player& player);
+void playCard(Round& round, Player& player, int cardIndex);

@@ -66,3 +66,18 @@ void cleanString(char* str) {
 
     str[writeIndex] = '\0';
 }
+
+char* getNextWord(char* str)
+{
+    if (isWhitespace(*str))
+    {
+        while (isWhitespace(*str))str++;
+        return str;
+    }
+    else
+    {
+        while (!isWhitespace(*str))str++;
+        while (isWhitespace(*str))str++;
+        return str;
+    }
+}

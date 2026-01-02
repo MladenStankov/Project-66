@@ -43,3 +43,6 @@ void printCard(const Card& card);
 
 // Returns whether the first Card beats the second Card
 bool beats(const Card& c1, const Card& c2, const Suit& trump);
+
+// Returns the value of the card (points)
+unsigned int getCardValue(const Card& card);

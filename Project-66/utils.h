@@ -10,3 +10,5 @@ bool compareWords(const char* str1, const char* str2);
 
 // Removes all unnecessary whitespaces from a string and makes all alpha characters lowercase
 void cleanString(char* str);
+
+char* getNextWord(char* str);
