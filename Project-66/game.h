@@ -1,29 +1,40 @@
 #pragma once
 #include "card.h"
 #include "player.h"
+#include "round.h"
 
-constexpr size_t MAX_DECK_SIZE = 24;
-
-struct Game {
-	Card deck[MAX_DECK_SIZE] = {};
-	size_t topCardIndex = 0;
-	Card trumpCard;
-	bool isStockClosed = false;
-	Player player1, player2;
+enum class GameSettingsType {
+	TARGET_POINTS = 1,
+	MARRIAGE_POINTS = 2,
+	SHOW_PLAYER_POINTS = 3,
+	LAST_TRICK_BONUS_POINTS = 4,
 };
 
+struct GameSettings {	
+	unsigned int targetPoints = 11;
+	unsigned int nonTrumpMarriagePoints = 20, trumpMarriagePoints = 40;
+	bool showPlayerPoints = false;
+	bool lastTrickBonusPoints = true;
+};
 
-// Fills the deck and shuffles the card.
-// Then deals 6 cards to both players and sets the trump card
-void initGame(Game& game);
+struct RoundsHistory {
+	Round* history;
+	size_t size = 0;
+};
 
-// Fisher–Yates shuffle
-void shuffleDeck(Card deck[MAX_DECK_SIZE]);
+struct Game {
+	Player player1, player2;
+	GameSettings settings;
+	RoundsHistory roundsHistory;
+};
 
-// Deals 3 cards to player1, then 3 cards to player2.
-// Then another 3 cards to player1 and 3 more cards to player2.
-// That way both players have 6 cards.
-void initialDealToPlayers(Card deck[MAX_DECK_SIZE], size_t& topCardIndex, Player& player1, Player& player2);
+GameSettings initGameSettings();
+
+void changeGameSettings(GameSettings& settings, GameSettingsType type, const char* value);
+
+Game initGame(const GameSettings& settings);
 
 void processCommand(Game& game, const char* command);
 void playRound(Game& game);
+
+void printRoundsHistory(const Game& game);

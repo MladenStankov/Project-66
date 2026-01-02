@@ -6,6 +6,9 @@ constexpr char DIAMONDS_SYMBOL[] = "\xE2\x99\xA6";
 constexpr char HEARTS_SYMBOL[] = "\xE2\x99\xA5";
 constexpr char SPADES_SYMBOL[] = "\xE2\x99\xA0";
 
+constexpr unsigned int TOTAL_SUITS = 4;
+constexpr unsigned int TOTAL_RANKS = 6;
+
 // Playing cards French-Suit
 enum class Suit {
     CLUBS,

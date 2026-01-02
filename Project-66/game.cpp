@@ -1,53 +1,46 @@
 #include "game.h"
 #include "utils.h"
+#include "player.h"
 
-void initGame(Game& game)
+GameSettings initGameSettings()
 {
-    size_t index = 0;
-    for (size_t suit = 0; suit < 4; ++suit) {
-        for (size_t rank = 0; rank < 6; rank++) {
-            game.deck[index].suit = (Suit)suit;
-            game.deck[index].rank = (Rank)rank;
-            index++;
+    GameSettings newGameSettings = {};
+
+    return newGameSettings;
+}
+
+Game initGame(const GameSettings& settings)
+{
+    Player player1 = initPlayer("Player1"), player2 = initPlayer("Player2");
+
+    Round* history = new Round[settings.targetPoints];
+    RoundsHistory roundsHistory = { history };
+    Game newGame = { player1, player2, settings, roundsHistory };
+
+    return newGame;
+}
+
+void printRoundsHistory(const Game& game)
+{
+    for (size_t i = 0; i < game.roundsHistory.size; i++)
+    {
+        Round r = game.roundsHistory.history[i];
+        if (r.state == RoundState::ENDED)
+        {
+            std::cout << "Round " << i + 1 << ": ";
+            std::cout << "Winner - "
+                << r.conclusion.winner->name
+                << "(+" << r.conclusion.accumulatedPoints << ") |";
+
+            std::cout << r.conclusion.winner->name << ": "
+                << r.conclusion.winnerPoints << "points | ";
+
+            std::cout << r.conclusion.loser->name << ": "
+                << r.conclusion.loserPoints << "points | ";
         }
-    }
-
-    game.topCardIndex = 0;
-    game.isStockClosed = false;
-
-    shuffleDeck(game.deck);
-    initialDealToPlayers(game.deck, game.topCardIndex, game.player1, game.player2);
-    game.trumpCard = game.deck[game.topCardIndex++];
-}
-
-void shuffleDeck(Card deck[MAX_DECK_SIZE])
-{
-    for (size_t i = MAX_DECK_SIZE - 1; i >= 1; --i)
-    {
-        size_t j = generateRandomNumber(0, i);
-        swapCards(deck[i], deck[j]);
-    }
-}
-
-void initialDealToPlayers(Card deck[MAX_DECK_SIZE], size_t& topCardIndex, Player& player1, Player& player2)
-{
-    for (size_t i = 0; i < 3; ++i)
-    {
-        addCardToHand(player1, deck[topCardIndex++]);
-    }
-
-    for (size_t i = 0; i < 3; ++i)
-    {
-        addCardToHand(player2, deck[topCardIndex++]);
-    }
-
-    for (size_t i = 0; i < 3; ++i)
-    {
-        addCardToHand(player1, deck[topCardIndex++]);
-    }
-
-    for (size_t i = 0; i < 3; ++i)
-    {
-        addCardToHand(player2, deck[topCardIndex++]);
+        else
+        {
+            std::cout << "Round " << i + 1 << ": Ongoing";
+        }
     }
 }
