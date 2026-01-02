@@ -11,13 +11,23 @@ GameSettings initGameSettings()
 
 Game initGame(const GameSettings& settings)
 {
-    Player player1 = initPlayer("Player1"), player2 = initPlayer("Player2");
+    Player player1 = initPlayer("Player1");
+    Player player2 = initPlayer("Player2");
 
     Round* history = new Round[settings.targetPoints];
     RoundsHistory roundsHistory = { history };
-    Game newGame = { player1, player2, settings, roundsHistory };
+    GameStatus status = GameStatus::NOT_STARTED;
+
+    Game newGame = { player1, player2, settings, roundsHistory, status };
 
     return newGame;
+}
+
+void startGame(Game& game)
+{
+    changeGameStatus(game, GameStatus::IN_BETWEEN_ROUNDS);
+    game.roundsHistory.history = new Round[game.settings.targetPoints];
+    game.roundsHistory.size = 1;
 }
 
 void printRoundsHistory(const Game& game)
@@ -43,4 +53,21 @@ void printRoundsHistory(const Game& game)
             std::cout << "Round " << i + 1 << ": Ongoing";
         }
     }
+}
+
+Player& getLeadingPlayer(Game& game)
+{
+    if (game.player1.isLeading == true) return game.player1;
+    else return game.player2;
+}
+
+Player& getNonLeadingPlayer(Game& game)
+{
+    if (game.player1.isLeading == false) return game.player1;
+    else return game.player2;
+}
+
+void changeGameStatus(Game& game, const GameStatus& status)
+{
+    game.status = status;
 }

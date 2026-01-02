@@ -12,8 +12,12 @@ struct Player
 {
 	const char* name;
 	PlayerHand hand;
+
 	unsigned int currentRoundPoints;
 	unsigned int overallPoints;
+
+	bool isLeading;
+	bool playedThisTrick = false;
 };
 
 Player initPlayer(const char* name);

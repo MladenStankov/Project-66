@@ -3,6 +3,13 @@
 #include "player.h"
 #include "round.h"
 
+enum class GameStatus {
+	NOT_STARTED,
+	IN_BETWEEN_ROUNDS,
+	IN_ROUND,
+	ENDED
+};
+
 enum class GameSettingsType {
 	TARGET_POINTS = 1,
 	MARRIAGE_POINTS = 2,
@@ -26,15 +33,22 @@ struct Game {
 	Player player1, player2;
 	GameSettings settings;
 	RoundsHistory roundsHistory;
+	GameStatus status;
 };
 
 GameSettings initGameSettings();
 
-void changeGameSettings(GameSettings& settings, GameSettingsType type, const char* value);
+//void changeGameSettings(GameSettings& settings, GameSettingsType type, unsigned int value);
 
 Game initGame(const GameSettings& settings);
 
-void processCommand(Game& game, const char* command);
+void startGame(Game& game);
+
+void changeGameStatus(Game& game, const GameStatus& status);
+
 void playRound(Game& game);
 
 void printRoundsHistory(const Game& game);
+
+Player& getLeadingPlayer(Game& game);
+Player& getNonLeadingPlayer(Game& game);

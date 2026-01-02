@@ -4,29 +4,24 @@
 #include <iostream>
 
 constexpr size_t MAX_DECK_SIZE = 24;
-constexpr size_t MAX_TRICKS = 12;
+
+struct Game;
 
 enum class RoundState {
+	NOT_STARTED,
 	ONGOING,
 	ENDED,
 };
 
 struct Trick {
-	Card leadPlayerCard;
-	Card otherPlayerCard;
-
-	Player* leadPlayer, *otherPlayer;
+	Card leadPlayerCard, otherPlayerCard;
+	Player* leadPlayer, * otherPlayer;
 	Player* winner;
 };
 
-struct TrickHistory {
-	Trick tricks[MAX_TRICKS] = {};
-	size_t size = 0;
-};
-
 struct Deck {
-    Card cards[MAX_DECK_SIZE];
-    size_t topCardIndex;
+	Card cards[MAX_DECK_SIZE] = {};
+	size_t topCardIndex = 0;
 };
 
 struct RoundConclusion {
@@ -36,28 +31,19 @@ struct RoundConclusion {
 };
 
 struct Round {
-    Deck deck;
-
+	Deck deck;
 	Suit trump;
 	Card bottomCard;
-
-	Player* currentLead, *currentOther;
-	TrickHistory trickHistory;
-
+	Trick lastTrick;
 	RoundState state = RoundState::ONGOING;
 	RoundConclusion conclusion = {};
 };
 
-// Fisher–Yates shuffle
+// Functions
 void shuffleDeck(Deck& deck);
 
-// Create and shuffle deck and deal 6 cards to players
-void startRound(Round& round, Player& player1, Player& player2);
+void startRound(Game& game);
 
-// Deal 3 to leading Player, then 3 to the other.
-// Then 3 more to the leading, and lastly 3 to the other.
-void initialDeal(Round& round);
-
+void initialDeal(Round& round, Game& game);
 void printLastTrick(const Round& round);
-
 void printTrumpSuit(const Round& round);

@@ -1,5 +1,6 @@
-#include "card.h"
 #include <iostream>
+#include "card.h"
+#include "console.h"
 
 const char* getRankString(const Rank& rank)
 {
@@ -37,7 +38,13 @@ const char* getSuitString(const Suit& suit)
 
 void printCard(const Card& card)
 {
+	if (card.suit == Suit::CLUBS || card.suit == Suit::SPADES)
+		setConsoleColor(Color::Gray);
+	else setConsoleColor(Color::Red);
+
 	std::cout << getRankString(card.rank) << getSuitString(card.suit);
+
+	setConsoleColor(Color::White);
 }
 
 bool beats(const Card& c1, const Card& c2, const Suit& trump)
