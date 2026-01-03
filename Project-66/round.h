@@ -9,7 +9,8 @@ struct Game;
 
 enum class RoundState {
 	NOT_STARTED,
-	ONGOING,
+	STARTED,
+	IN_MIDDLE,
 	ENDED,
 };
 
@@ -35,7 +36,7 @@ struct Round {
 	Suit trump;
 	Card bottomCard;
 	Trick lastTrick, currentTrick;
-	RoundState state = RoundState::ONGOING;
+	RoundState state = RoundState::STARTED;
 	RoundConclusion conclusion = {};
 };
 
@@ -47,3 +48,5 @@ Round& startRound(Game& game);
 void initialDeal(Round& round, Game& game);
 void printLastTrick(const Round& round);
 void printRoundInfo(const Round& round);
+void changeRoundState(Round& round, RoundState state);
+void switchNine(Round& round, Player& player);

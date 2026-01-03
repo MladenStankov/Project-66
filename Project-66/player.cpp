@@ -125,6 +125,11 @@ void playCard(Round& round, Player& player, int cardIndex)
 		
 		winner->playedThisTurn = false;
 		loser->playedThisTurn = false;
+
+		if(round.state == RoundState::STARTED)
+		{
+			changeRoundState(round, RoundState::IN_MIDDLE);
+		}
 	}
 }
 
@@ -199,3 +204,17 @@ void sortHand(Player& player, const Suit& trump)
 		}
 	}
 }
+
+bool findCardInHand(Player& player, const Suit& suit, const Rank& rank, size_t& index)
+{
+	for (size_t i = 0; i < player.hand.cardCount; i++)
+	{
+		if (player.hand.hand[i].suit == suit && player.hand.hand[i].rank == rank)
+		{
+			index = i;
+			return true;
+		}
+	}
+	return false;
+}
+

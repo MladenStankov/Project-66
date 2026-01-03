@@ -25,8 +25,7 @@ void showHelp()
 	std::cout << "> close (Closes the deck)" << std::endl;
 
 	std::cout << "> last-trick (Shows who won the last trick and what were the cards)" << std::endl;
-	std::cout << "> trump (Shows the trump suit)" << std::endl;
-	std::cout << "> bottom-card (Shows the bottom card, if it's there" << std::endl;
+	std::cout << "> info (Shows the trump suit and bottom card)" << std::endl;
 	std::cout << "> history (Shows round history)" << std::endl;
 	std::cout << "> status (Shows current status of the game)" << std::endl;
 
@@ -145,7 +144,23 @@ void processCommand(char* command, Game& game)
 			return;
 		}
 
-		//switchNine(game);
+		Round& round = getCurrentRound(game);
+		if (round.state != RoundState::IN_MIDDLE)
+		{
+			std::cout << "You must have taken atleast one trick to switch the nine" << std::endl;
+			return;
+		}
+		
+		Player& player = getThePlayerThatIsOnTurn(game);
+		if (player.isLeading != true)
+		{
+			std::cout << "You must be leading to switch the nine" << std::endl;
+			return;
+		}
+
+		switchNine(round, player);
+
+		std::cout << "You switched your Nine trump card with the bottom card" << std::endl;
 	}
 	else if (compareWords(command, "marriage"))
 	{
@@ -165,23 +180,16 @@ void processCommand(char* command, Game& game)
 		}
 		//showLastTrick(game);
 	}
-	else if (compareWords(command, "trump"))
+	else if (compareWords(command, "info"))
 	{
 		if (game.status != GameStatus::IN_ROUND)
 		{
 			std::cout << "Game is not in a round" << std::endl;
 			return;
 		}
-		//showTrump(game);
-	}
-	else if (compareWords(command, "bottom-card"))
-	{
-		if (game.status != GameStatus::IN_ROUND)
-		{
-			std::cout << "Game is not in a round" << std::endl;
-			return;
-		}
-		//something 
+
+		Round& round = getCurrentRound(game);
+		printRoundInfo(round);
 	}
 	else if (compareWords(command, "history"))
 	{

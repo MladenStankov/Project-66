@@ -128,3 +128,17 @@ void printRoundInfo(const Round& round)
 
 	printBottomCard(round);
 }
+
+void changeRoundState(Round& round, RoundState state)
+{
+	round.state = state;
+}
+
+void switchNine(Round& round, Player& player)
+{
+	size_t index = 0;
+	if (findCardInHand(player, round.trump, Rank::NINE, index) == true)
+	{
+		swapCards(player.hand.hand[index], round.bottomCard);
+	}
+}

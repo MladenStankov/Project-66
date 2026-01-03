@@ -34,3 +34,5 @@ void playCard(Round& round, Player& player, int cardIndex);
 // Sort all cards by power and suit. Separates red and black suits,
 // places trump suit first, places cards with same suit in order of power, ascending.
 void sortHand(Player& player, const Suit& trump);
+
+bool findCardInHand(Player& player, const Suit& suit, const Rank& rank, size_t& index);

@@ -1,5 +1,6 @@
 #pragma once
 #include "card.h"
+#include "player.h"
 
 unsigned int generateRandomNumber(unsigned int from, unsigned int to);
 
