@@ -49,6 +49,69 @@ void removeCardFromHand(Player& player, size_t index)
 	player.hand.cardCount--;
 }
 
+// Returns false if the check is not correct
+bool strictCheck(Round& round, Player& player, const Card& playedCard)
+{
+	Suit leadSuit = round.currentTrick.leadPlayerCard.suit;
+	bool hasLeadSuit = false;
+	for (size_t i = 0; i < player.hand.cardCount; i++)
+	{
+		if (player.hand.hand[i].suit == leadSuit)
+		{
+			hasLeadSuit = true;
+			break;
+		}
+	}
+
+	if (hasLeadSuit)
+	{
+		if (playedCard.suit != leadSuit)
+		{
+			std::cout << "You must follow suit! (" << getSuitString(leadSuit) << ")" << std::endl;
+			return false;
+		}
+	}
+	else
+	{
+		bool hasTrump = false;
+		for (size_t i = 0; i < player.hand.cardCount; i++)
+		{
+			if (player.hand.hand[i].suit == round.trump)
+			{
+				hasTrump = true;
+				break;
+			}
+		}
+
+		if (hasTrump)
+		{
+			if (playedCard.suit != round.trump)
+			{
+				std::cout << "You must play a trump card!" << std::endl;
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+//Returns false if the check is not correct
+bool marriageCheck(Player& player, const Card& playedCard)
+{
+	if (playedCard.suit != player.marriageSuit || (playedCard.rank != Rank::KING && playedCard.rank != Rank::QUEEN))
+	{
+		Card kingCard = { playedCard.suit, Rank::KING }, queenCard = { playedCard.suit, Rank::QUEEN };
+		std::cout << "You must play the ";
+		printCard(queenCard);
+		std::cout << " or ";
+		printCard(kingCard);
+		std::cout << std::endl;
+
+		return false;
+	}
+	player.hasMarriage = false;
+}
+
 bool playCard(Round& round, Player& player, int cardIndex)
 {
 	if (cardIndex < 0 || cardIndex >= player.hand.cardCount)
@@ -63,24 +126,22 @@ bool playCard(Round& round, Player& player, int cardIndex)
 		return true;
 	}
 
-	if (player.hasMarriage)
-	{
-		Card c = player.hand.hand[cardIndex];
-		if (c.suit != player.marriageSuit || (c.rank != Rank::KING && c.rank != Rank::QUEEN))
-		{
-			Card kingCard = { c.suit, Rank::KING }, queenCard = { c.suit, Rank::QUEEN };
-			std::cout << "You must play the";
-			printCard(queenCard);
-			std::cout << " or ";
-			printCard(kingCard);
-			std::cout << std::endl;
+	Card playedCard = player.hand.hand[cardIndex];
 
-			return true;
-		}
-		player.hasMarriage = false;
+	// Strict rules check
+	bool strictRules = round.isClosed || round.deck.topCardIndex >= MAX_DECK_SIZE;
+
+	if (strictRules && round.currentTrick.leadPlayer != nullptr)
+	{
+		if (!strictCheck(round, player, playedCard)) return true;
 	}
 
-	Card playedCard = player.hand.hand[cardIndex];
+	//Marriage check
+	if (player.hasMarriage)
+	{
+		if (!marriageCheck(player, playedCard)) return true;
+	}
+
 	removeCardFromHand(player, cardIndex);
 
 	std::cout << player.name << " played ";
@@ -123,7 +184,7 @@ bool playCard(Round& round, Player& player, int cardIndex)
 		round.lastTrick = currentTrick;
 		round.currentTrick = {};
 
-		if (round.deck.topCardIndex < MAX_DECK_SIZE)
+		if (!round.isClosed && round.deck.topCardIndex < MAX_DECK_SIZE)
 		{
 			Card c1 = round.deck.cards[round.deck.topCardIndex++];
 			addCardToHand(*winner, c1, &round.trump);
@@ -151,6 +212,7 @@ bool playCard(Round& round, Player& player, int cardIndex)
 
 		return true;
 	}
+	return true;
 }
 
 bool isRed(Suit s)
@@ -186,7 +248,8 @@ int getSuitPriority(Suit s, Suit trump)
 			if (s == Suit::CLUBS) return 2;
 			if (s == Suit::DIAMONDS) return 3;
 			break;
-	}
+		}
+	return 0;
 }
 
 void sortHand(Player& player, const Suit& trump)

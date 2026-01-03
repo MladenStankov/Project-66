@@ -312,6 +312,46 @@ void stopCommand(Game& game)
 	endRound(round, game, &player);
 }
 
+void closeCommand(Game& game)
+{
+	if (game.status != GameStatus::IN_ROUND)
+	{
+		std::cout << "Game is not in a round" << std::endl;
+		return;
+	}
+
+	Round& round = getCurrentRound(game);
+	if (round.status != RoundStatus::IN_MIDDLE)
+	{
+		std::cout << "You should have won atleast one turn to close the game" << std::endl;
+		return;
+	}
+
+	Player& player = getThePlayerThatIsOnTurn(game);
+	if (!player.isLeading)
+	{
+		std::cout << "You must be leading to close the game" << std::endl;
+		return;
+	}
+
+	if (round.isClosed)
+	{
+		std::cout << "The game is already closed" << std::endl;
+		return;
+	}
+	
+	if (round.deck.topCardIndex >= MAX_DECK_SIZE)
+	{
+		std::cout << "The deck is empty, you cannot close it" << std::endl;
+		return;
+	}
+
+	round.isClosed = true;
+	round.playerWhoClosed = &player;
+
+	std::cout << player.name << " closed the game!" << std::endl;
+}
+
 void processCommand(char* command, Game& game)
 {
 	system("CLS");
@@ -350,7 +390,7 @@ void processCommand(char* command, Game& game)
 	}
 	else if (compareWords(command, "close"))
 	{
-		// TODO
+		closeCommand(game);
 	}
 	else if (compareWords(command, "last-trick"))
 	{

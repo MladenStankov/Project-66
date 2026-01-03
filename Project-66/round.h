@@ -37,6 +37,9 @@ struct Round {
 	Card bottomCard;
 	Trick lastTrick, currentTrick;
 	RoundStatus status = RoundStatus::STARTED;
+	Player* playerWhoClosed = nullptr;
+	bool isClosed = false;
+
 	RoundConclusion conclusion = {};
 };
 

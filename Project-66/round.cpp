@@ -177,9 +177,27 @@ void endRound(Round& round, Game& game, Player* stopper)
 	}
 	else
 	{
-		winner = (game.player1.currentRoundPoints >= game.player2.currentRoundPoints) ? &game.player1 : &game.player2;
-		loser = (game.player1.currentRoundPoints < game.player2.currentRoundPoints) ? &game.player1 : &game.player2;
-		accumulatedGamePoints = (loser->currentRoundPoints >= 33) ? 1 : 2;
+		if (round.playerWhoClosed != nullptr)
+		{
+			if (round.playerWhoClosed->currentRoundPoints >= 66)
+			{
+				winner = round.playerWhoClosed;
+				loser = (winner == &game.player1) ? &game.player2 : &game.player1;
+				accumulatedGamePoints = (loser->currentRoundPoints >= 33) ? 1 : 2;
+			}
+			else
+			{
+				loser = round.playerWhoClosed;
+				winner = (loser == &game.player1) ? &game.player2 : &game.player1;
+				accumulatedGamePoints = 3;
+			}
+		}
+		else
+		{
+			winner = (game.player1.currentRoundPoints >= game.player2.currentRoundPoints) ? &game.player1 : &game.player2;
+			loser = (game.player1.currentRoundPoints < game.player2.currentRoundPoints) ? &game.player1 : &game.player2;
+			accumulatedGamePoints = (loser->currentRoundPoints >= 33) ? 1 : 2;
+		}
 	}
 
 	round.conclusion.loser = loser;
