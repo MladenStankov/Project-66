@@ -22,6 +22,8 @@ struct Player
 
 	bool isLeading;
 	bool playedThisTurn = false;
+	bool hasMarriage = false;
+	Suit marriageSuit;
 };
 
 Player initPlayer(const char* name);

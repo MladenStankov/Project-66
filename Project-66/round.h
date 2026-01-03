@@ -11,6 +11,7 @@ enum class RoundState {
 	NOT_STARTED,
 	STARTED,
 	IN_MIDDLE,
+	CLOSED,
 	ENDED,
 };
 
@@ -49,4 +50,5 @@ void initialDeal(Round& round, Game& game);
 void printLastTrick(const Round& round);
 void printRoundInfo(const Round& round);
 void changeRoundState(Round& round, RoundState state);
-void switchNine(Round& round, Player& player);
+bool switchNine(Round& round, Player& player);
+bool announceMarriage(Round& round, Player& player, Suit suit);

@@ -5,12 +5,26 @@
 #include "round.h"
 #include "game.h"
 
+bool getSuit(char* str, Suit& suit)
+{
+	if (compareWords(str, "hearts")) 
+		suit = Suit::HEARTS;
+	else if (compareWords(str, "diamonds")) 
+		suit = Suit::DIAMONDS;
+	else if (compareWords(str, "clubs")) 
+		suit = Suit::CLUBS;
+	else if (compareWords(str, "spades")) 
+		suit = Suit::SPADES;
+	else return false;
+	return true;
+}
+
 void setConsoleColor(Color color)
 {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), (int)color);
 }
 
-void showHelp()
+void showHelpCommand()
 {
 	std::cout << "> help" << std::endl;
 
@@ -37,7 +51,7 @@ void showHelp()
 	std::cout << "> load <name> (Loads a game file with a <name>)" << std::endl;
 }
 
-void showRules(const GameSettings& gameSettings)
+void showRulesCommand(const GameSettings& gameSettings)
 {
 	std::cout << "SANTASE (66)" << std::endl;
 	std::cout << "Each player gets 6 cards. The Trump suit is chosen at random." << std::endl;
@@ -50,126 +64,215 @@ void showRules(const GameSettings& gameSettings)
 	std::cout << "The first player to reach " << gameSettings.targetPoints << " rounds wins the game." << std::endl;
 }
 
+void startCommand(Game& game)
+{
+	if (game.status == GameStatus::NOT_STARTED)
+	{
+		startGame(game);
+		std::cout << "Game started. Type again start to start the first round." << std::endl;
+	}
+	else if (game.status == GameStatus::IN_BETWEEN_ROUNDS)
+	{
+		changeGameStatus(game, GameStatus::IN_ROUND);
+		Round& round = startRound(game);
+		std::cout << "The Round started" << std::endl;
+		std::cout << "Leading player: " << getLeadingPlayer(game).name << std::endl;
+		std::cout << "Non-Leading player: " << getNonLeadingPlayer(game).name << std::endl;
+		printRoundInfo(round);
+	}
+	else {
+		std::cout << "Game is already in progress" << std::endl;
+	}
+}
+
+void settingsCommand(Game& game)
+{
+	if (game.status != GameStatus::NOT_STARTED)
+	{
+		std::cout << "Game already started. Cannot change settings" << std::endl;
+	}
+	else
+	{
+		std::cout << "TODO" << std::endl;
+	}
+}
+
+void handCommand(Game& game)
+{
+	if (game.status != GameStatus::IN_ROUND)
+	{
+		std::cout << "Game is not in a round" << std::endl;
+		return;
+	}
+
+	Player& leadingPlayer = getLeadingPlayer(game);
+	if (leadingPlayer.playedThisTurn == false)
+	{
+		std::cout << leadingPlayer.name << "`s hand (lead)" << std::endl;
+		printHand(leadingPlayer);
+	}
+	else
+	{
+		Player& nonLeadingPlayer = getNonLeadingPlayer(game);
+		std::cout << nonLeadingPlayer.name << "`s hand (non-lead)" << std::endl;
+
+		printHand(nonLeadingPlayer);
+	}
+	std::cout << std::endl;
+}
+
+void playCommand(Game& game, char* command)
+{
+	if (game.status != GameStatus::IN_ROUND)
+	{
+		std::cout << "Game is not in a round" << std::endl;
+		return;
+	}
+
+	char* nextArg = getNextWord(command);
+	if (*nextArg == '\0')
+	{
+		std::cout << "Usage: play <index>" << std::endl;
+		return;
+	}
+	int cardIndex = customAtoi(nextArg);
+
+	Player& player = getThePlayerThatIsOnTurn(game);
+	Round& currentRound = getCurrentRound(game);
+	playCard(currentRound, player, cardIndex);
+}
+
+void switchNineCommand(Game& game)
+{
+	if (game.status != GameStatus::IN_ROUND)
+	{
+		std::cout << "Game is not in a round" << std::endl;
+		return;
+	}
+
+	Round& round = getCurrentRound(game);
+	if (round.state != RoundState::IN_MIDDLE)
+	{
+		std::cout << "Round must not be closed and you should have won atleast one turn" << std::endl;
+		return;
+	}
+
+	Player& player = getThePlayerThatIsOnTurn(game);
+	if (player.isLeading != true)
+	{
+		std::cout << "You must be leading to switch the nine" << std::endl;
+		return;
+	}
+
+	Card bottomCard = round.bottomCard;
+	Card nineTrump = { round.trump, Rank::NINE };
+
+	if (switchNine(round, player) != true)
+	{
+		std::cout << "You dont have ";
+		printCard(nineTrump);
+		std::cout << std::endl;
+		return;
+	}
+
+	std::cout << "You switched your ";
+	printCard(nineTrump);
+	std::cout << " with ";
+	printCard(bottomCard);
+	std::cout << std::endl;
+}
+
+void marriageCommand(Game& game, char* command)
+{
+	if (game.status != GameStatus::IN_ROUND)
+	{
+		std::cout << "Game is not in a round" << std::endl;
+		return;
+	}
+
+	Round& round = getCurrentRound(game);
+	if (round.state != RoundState::IN_MIDDLE)
+	{
+		std::cout << "You should have won atleast one turn" << std::endl;
+		return;
+	}
+
+	Player& player = getThePlayerThatIsOnTurn(game);
+	if (player.isLeading != true)
+	{
+		std::cout << "You must be leading to switch the nine" << std::endl;
+		return;
+	}
+
+	char* nextArg = getNextWord(command);
+	if (*nextArg == '\0')
+	{
+		std::cout << "Usage: marriage <suit>" << std::endl;
+		return;
+	}
+
+	Suit suit;
+	if (getSuit(nextArg, suit) == false)
+	{
+		std::cout << "The <suit> argument must be one of these: { clubs, diamnonds, hearts, spades }" << std::endl;
+		return;
+	}
+
+	if (announceMarriage(round, player, suit) != true)
+	{
+		std::cout << "You dont have a marriage of " << getSuitString(suit) << std::endl;
+		return;
+	}
+
+	std::cout << "You announced a marriage of " << getSuitString(suit);
+	int points = (suit == round.trump) ? 40 : 20;
+	std::cout << " (+" << points << " points)" << std::endl;
+
+	std::cout << "Now you must play either: ";
+
+	Card kingCard = { suit, Rank::KING }, queenCard = { suit, Rank::QUEEN };
+	printCard(queenCard);
+	std::cout << " or ";
+	printCard(kingCard);
+	std::cout << std::endl;
+
+}
+
 void processCommand(char* command, Game& game)
 {
 	system("CLS");
 
 	if (compareWords(command, "help"))
 	{
-		showHelp();
+		showHelpCommand();
 	}
 	else if (compareWords(command, "start"))
 	{
-		if (game.status == GameStatus::NOT_STARTED)
-		{
-			startGame(game);
-			std::cout << "Game started. Type again start to start the first round." << std::endl;
-		}
-		else if (game.status == GameStatus::IN_BETWEEN_ROUNDS)
-		{
-			changeGameStatus(game, GameStatus::IN_ROUND);
-			Round& round = startRound(game);
-			std::cout << "The Round started" << std::endl;
-			std::cout << "Leading player: " << getLeadingPlayer(game).name << std::endl;
-			std::cout << "Non-Leading player: " << getNonLeadingPlayer(game).name << std::endl;
-			printRoundInfo(round);
-		}
-		else {
-			std::cout << "Game is already in progress" << std::endl;
-		}
+		startCommand(game);
 	}
 	else if (compareWords(command, "rules"))
 	{
-		showRules(game.settings);
+		showRulesCommand(game.settings);
 	}
 	else if (compareWords(command, "settings"))
 	{
-		if (game.status != GameStatus::NOT_STARTED)
-		{
-			std::cout << "Game already started. Cannot change settings" << std::endl;
-		}
-		else
-		{
-		//showSettings(game.settings);
-		}
+		settingsCommand(game);
 	}
 	else if (compareWords(command, "hand"))
 	{
-		if (game.status != GameStatus::IN_ROUND)
-		{
-			std::cout << "Game is not in a round" << std::endl;
-			return;
-		}
-
-		Player& leadingPlayer = getLeadingPlayer(game);
-		if (leadingPlayer.playedThisTurn == false)
-		{
-			std::cout << leadingPlayer.name << "`s hand (lead)" << std::endl;
-			printHand(leadingPlayer);
-		}
-		else
-		{
-			Player& nonLeadingPlayer = getNonLeadingPlayer(game);
-			std::cout << nonLeadingPlayer.name << "`s hand (non-lead)" << std::endl;
-
-			printHand(nonLeadingPlayer);
-		}
-		std::cout << std::endl;
+		handCommand(game);
 	}
 	else if (compareWords(command, "play"))
 	{
-		if (game.status != GameStatus::IN_ROUND)
-		{
-			std::cout << "Game is not in a round" << std::endl;
-			return;
-		}
-
-		char* nextArg = getNextWord(command);
-		if (*nextArg == '\0')
-		{
-			std::cout << "Usage: play <index>" << std::endl;
-			return;
-		}
-		int cardIndex = customAtoi(nextArg);
-
-		Player& player = getThePlayerThatIsOnTurn(game);
-		Round& currentRound = getCurrentRound(game);
-		playCard(currentRound, player, cardIndex);
+		playCommand(game, command);
 	}
 	else if (compareWords(command, "switch-nine"))
 	{
-		if (game.status != GameStatus::IN_ROUND)
-		{
-			std::cout << "Game is not in a round" << std::endl;
-			return;
-		}
-
-		Round& round = getCurrentRound(game);
-		if (round.state != RoundState::IN_MIDDLE)
-		{
-			std::cout << "You must have taken atleast one trick to switch the nine" << std::endl;
-			return;
-		}
-		
-		Player& player = getThePlayerThatIsOnTurn(game);
-		if (player.isLeading != true)
-		{
-			std::cout << "You must be leading to switch the nine" << std::endl;
-			return;
-		}
-
-		switchNine(round, player);
-
-		std::cout << "You switched your Nine trump card with the bottom card" << std::endl;
+		switchNineCommand(game);
 	}
 	else if (compareWords(command, "marriage"))
 	{
-		if (game.status != GameStatus::IN_ROUND)
-		{
-			std::cout << "Game is not in a round" << std::endl;
-			return;
-		}
-		//marriage(game);
+		marriageCommand(game, command);
 	}
 	else if (compareWords(command, "last-trick"))
 	{
@@ -195,7 +298,7 @@ void processCommand(char* command, Game& game)
 	{
 		if (game.status != GameStatus::IN_BETWEEN_ROUNDS)
 		{
-			std::cout << "Game is not in a round" << std::endl;
+			std::cout << "Round must be finished to show round history" << std::endl;
 			return;
 		}
 		//showHistory(game);

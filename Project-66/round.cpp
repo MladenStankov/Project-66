@@ -134,11 +134,30 @@ void changeRoundState(Round& round, RoundState state)
 	round.state = state;
 }
 
-void switchNine(Round& round, Player& player)
+bool switchNine(Round& round, Player& player)
 {
 	size_t index = 0;
 	if (findCardInHand(player, round.trump, Rank::NINE, index) == true)
 	{
 		swapCards(player.hand.hand[index], round.bottomCard);
+		sortHand(player, round.trump);
+
+		return true;
 	}
+	else return false;
+}
+
+bool announceMarriage(Round& round, Player& player, Suit suit)
+{
+	size_t temp;
+	if (!findCardInHand(player, suit, Rank::KING, temp) || !findCardInHand(player, suit, Rank::QUEEN, temp))
+		return false;
+
+	player.hasMarriage = true;
+	player.marriageSuit = suit;
+
+	if (suit == round.trump) player.currentRoundPoints += 40;
+	else player.currentRoundPoints += 20;
+
+	return true;
 }

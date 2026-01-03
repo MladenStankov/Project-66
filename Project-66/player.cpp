@@ -63,6 +63,23 @@ void playCard(Round& round, Player& player, int cardIndex)
 		return;
 	}
 
+	if (player.hasMarriage)
+	{
+		Card c = player.hand.hand[cardIndex];
+		if (c.suit != player.marriageSuit || (c.rank != Rank::KING && c.rank != Rank::QUEEN))
+		{
+			Card kingCard = { c.suit, Rank::KING }, queenCard = { c.suit, Rank::QUEEN };
+			std::cout << "You must play the";
+			printCard(queenCard);
+			std::cout << " or ";
+			printCard(kingCard);
+			std::cout << std::endl;
+
+			return;
+		}
+		player.hasMarriage = false;
+	}
+
 	Card playedCard = player.hand.hand[cardIndex];
 	removeCardFromHand(player, cardIndex);
 
