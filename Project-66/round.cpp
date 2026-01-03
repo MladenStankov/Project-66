@@ -125,8 +125,8 @@ void printBottomCard(const Round& round)
 void printRoundInfo(const Round& round)
 {
 	printTrumpSuit(round);
-
 	printBottomCard(round);
+	std::cout << "Cards left in deck: " << MAX_DECK_SIZE - round.deck.topCardIndex << std::endl;
 }
 
 void changeRoundState(Round& round, RoundState state)

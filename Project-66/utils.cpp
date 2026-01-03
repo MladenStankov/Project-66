@@ -93,3 +93,7 @@ int customAtoi(char* str)
 	return result;
 }
 
+void printSeparatingLine()
+{
+	std::cout << "--------------------------------" << std::endl;
+}

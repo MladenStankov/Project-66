@@ -15,3 +15,4 @@ void cleanString(char* str);
 char* getNextWord(char* str);
 
 int customAtoi(char* str);
+void printSeparatingLine();

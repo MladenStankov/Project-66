@@ -55,3 +55,4 @@ Player& getNonLeadingPlayer(Game& game);
 Player& getThePlayerThatIsOnTurn(Game& game);
 
 Round& getCurrentRound(Game& game);
+void printGameInfo(const Game& game);

@@ -86,3 +86,11 @@ Round& getCurrentRound(Game& game)
     size_t roundHistorySize = game.roundsHistory.size;
     return game.roundsHistory.history[roundHistorySize - 1];
 }
+
+void printGameInfo(const Game& game)
+{
+    std::cout << "Current Round: #" << game.roundsHistory.size << std::endl;
+
+    std::cout << game.player1.name << " round wins: " << game.player1.overallPoints << std::endl;
+    std::cout << game.player2.name << " round wins: " << game.player2.overallPoints << std::endl;
+}

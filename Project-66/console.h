@@ -1,6 +1,7 @@
 #pragma once
 #include "game.h"
 
+
 constexpr size_t MAX_COMMAND_LEN = 100;
 
 // Shows all avaiable commands and information about them

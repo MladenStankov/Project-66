@@ -39,7 +39,7 @@ void showHelpCommand()
 	std::cout << "> close (Closes the deck)" << std::endl;
 
 	std::cout << "> last-trick (Shows who won the last trick and what were the cards)" << std::endl;
-	std::cout << "> info (Shows the trump suit and bottom card)" << std::endl;
+	std::cout << "> info (Shows the trump suit and bottom card and other info)" << std::endl;
 	std::cout << "> history (Shows round history)" << std::endl;
 	std::cout << "> status (Shows current status of the game)" << std::endl;
 
@@ -76,8 +76,14 @@ void startCommand(Game& game)
 		changeGameStatus(game, GameStatus::IN_ROUND);
 		Round& round = startRound(game);
 		std::cout << "The Round started" << std::endl;
+		
+		printSeparatingLine();
+
 		std::cout << "Leading player: " << getLeadingPlayer(game).name << std::endl;
 		std::cout << "Non-Leading player: " << getNonLeadingPlayer(game).name << std::endl;
+
+		printSeparatingLine();
+
 		printRoundInfo(round);
 	}
 	else {
@@ -255,6 +261,25 @@ void lastTrickCommand(Game& game)
 	printLastTrick(round);
 }
 
+void infoCommand(Game& game)
+{
+	if (game.status != GameStatus::IN_ROUND)
+	{
+		std::cout << "Game is not in a round" << std::endl;
+		return;
+	}
+
+	Round& round = getCurrentRound(game);
+
+	std::cout << "Current Round Info:" << std::endl;
+	printRoundInfo(round);
+
+	printSeparatingLine();
+
+	std::cout << "Game Info:" << std::endl;
+	printGameInfo(game);
+}
+
 void processCommand(char* command, Game& game)
 {
 	system("CLS");
@@ -291,20 +316,17 @@ void processCommand(char* command, Game& game)
 	{
 		marriageCommand(game, command);
 	}
+	else if (compareWords(command, "close"))
+	{
+		// TODO
+	}
 	else if (compareWords(command, "last-trick"))
 	{
 		lastTrickCommand(game);
 	}
 	else if (compareWords(command, "info"))
 	{
-		if (game.status != GameStatus::IN_ROUND)
-		{
-			std::cout << "Game is not in a round" << std::endl;
-			return;
-		}
-
-		Round& round = getCurrentRound(game);
-		printRoundInfo(round);
+		infoCommand(game);
 	}
 	else if (compareWords(command, "history"))
 	{
@@ -314,15 +336,6 @@ void processCommand(char* command, Game& game)
 			return;
 		}
 		//showHistory(game);
-	}
-	else if (compareWords(command, "status"))
-	{
-		if (game.status != GameStatus::IN_BETWEEN_ROUNDS)
-		{
-			std::cout << "Game is not in a round" << std::endl;
-			return;
-		}
-		//showStatus(game);
 	}
 	else if (compareWords(command, "stop"))
 	{
