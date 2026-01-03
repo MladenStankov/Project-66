@@ -37,20 +37,22 @@ void printRoundsHistory(const Game& game)
         Round r = game.roundsHistory.history[i];
         if (r.state == RoundState::ENDED)
         {
-            std::cout << "Round " << i + 1 << ": ";
+            std::cout << "Round " << i + 1 << ": " << std::endl;
             std::cout << "Winner - "
                 << r.conclusion.winner->name
-                << "(+" << r.conclusion.accumulatedPoints << ") |";
+                << " (+" << r.conclusion.accumulatedPoints << ")" << std::endl;;
 
             std::cout << r.conclusion.winner->name << ": "
-                << r.conclusion.winnerPoints << "points | ";
+                << r.conclusion.winnerPoints << " points" << std::endl;
 
             std::cout << r.conclusion.loser->name << ": "
-                << r.conclusion.loserPoints << "points | ";
+                << r.conclusion.loserPoints << " points " << std::endl;
+
+            printSeparatingLine();
         }
         else
         {
-            std::cout << "Round " << i + 1 << ": Ongoing";
+            std::cout << "Round " << i + 1 << ": Not started" << std::endl;
         }
     }
 }

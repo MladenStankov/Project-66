@@ -145,7 +145,10 @@ void playCommand(Game& game, char* command)
 
 	Player& player = getThePlayerThatIsOnTurn(game);
 	Round& currentRound = getCurrentRound(game);
-	playCard(currentRound, player, cardIndex);
+	if (playCard(currentRound, player, cardIndex) == false)
+	{
+		endRound(currentRound, game);
+	}
 }
 
 void switchNineCommand(Game& game)
@@ -280,6 +283,16 @@ void infoCommand(Game& game)
 	printGameInfo(game);
 }
 
+void historyCommand(Game& game)
+{
+	if (game.status != GameStatus::IN_BETWEEN_ROUNDS)
+	{
+		std::cout << "Round must be finished to show round history" << std::endl;
+		return;
+	}
+	printRoundsHistory(game);
+}
+
 void processCommand(char* command, Game& game)
 {
 	system("CLS");
@@ -330,12 +343,7 @@ void processCommand(char* command, Game& game)
 	}
 	else if (compareWords(command, "history"))
 	{
-		if (game.status != GameStatus::IN_BETWEEN_ROUNDS)
-		{
-			std::cout << "Round must be finished to show round history" << std::endl;
-			return;
-		}
-		//showHistory(game);
+		historyCommand(game);
 	}
 	else if (compareWords(command, "stop"))
 	{

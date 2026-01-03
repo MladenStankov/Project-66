@@ -49,18 +49,18 @@ void removeCardFromHand(Player& player, size_t index)
 	player.hand.cardCount--;
 }
 
-void playCard(Round& round, Player& player, int cardIndex)
+bool playCard(Round& round, Player& player, int cardIndex)
 {
 	if (cardIndex < 0 || cardIndex >= player.hand.cardCount)
 	{
 		std::cout << "Invalid card index." << std::endl;
-		return;
+		return true;
 	}
 
 	if (player.playedThisTurn)
 	{
 		std::cout << "You have already played a card this turn." << std::endl;
-		return;
+		return true;
 	}
 
 	if (player.hasMarriage)
@@ -75,7 +75,7 @@ void playCard(Round& round, Player& player, int cardIndex)
 			printCard(kingCard);
 			std::cout << std::endl;
 
-			return;
+			return true;
 		}
 		player.hasMarriage = false;
 	}
@@ -125,16 +125,17 @@ void playCard(Round& round, Player& player, int cardIndex)
 
 		if (round.deck.topCardIndex < MAX_DECK_SIZE)
 		{
-			if (round.deck.topCardIndex < MAX_DECK_SIZE)
-			{
-				Card c = round.deck.cards[round.deck.topCardIndex++];
-				addCardToHand(*winner, c, &round.trump);
-			}
-			if (round.deck.topCardIndex < MAX_DECK_SIZE)
-			{
-				Card c = round.deck.cards[round.deck.topCardIndex++];
-				addCardToHand(*loser, c, &round.trump);
-			}
+			Card c1 = round.deck.cards[round.deck.topCardIndex++];
+			addCardToHand(*winner, c1, &round.trump);
+
+			Card c2 = round.deck.cards[round.deck.topCardIndex++];
+			addCardToHand(*loser, c2, &round.trump);
+		}
+		else if (winner->hand.cardCount == 0)
+		{
+			winner->currentRoundPoints += 10;
+			std::cout << "Last hand for " << winner->name << " (+10 points)" << std::endl << std::endl;
+			return false;
 		}
 
 		winner->isLeading = true;
@@ -147,6 +148,8 @@ void playCard(Round& round, Player& player, int cardIndex)
 		{
 			changeRoundState(round, RoundState::IN_MIDDLE);
 		}
+
+		return true;
 	}
 }
 

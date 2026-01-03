@@ -161,3 +161,38 @@ bool announceMarriage(Round& round, Player& player, Suit suit)
 
 	return true;
 }
+
+void endRound(Round& round, Game& game)
+{
+	round.state = RoundState::ENDED;
+
+	Player& winner = (game.player1.currentRoundPoints >= game.player2.currentRoundPoints) ? game.player1 : game.player2;
+	Player& loser = (game.player1.currentRoundPoints < game.player2.currentRoundPoints) ? game.player1 : game.player2;
+
+	round.conclusion.loser = &loser;
+	round.conclusion.winner = &winner;
+	round.conclusion.loserPoints = loser.currentRoundPoints;
+	round.conclusion.winnerPoints = winner.currentRoundPoints;
+
+	int accumulatedGamePoints = (loser.currentRoundPoints >= 33) ? 1 : 2;
+	round.conclusion.accumulatedPoints = accumulatedGamePoints;
+
+	std::cout << "Round " << game.roundsHistory.size << " ended." << std::endl;
+	std::cout << "Calculating points..." << std::endl;
+	std::cout << winner.name << " wins the round! (+" << accumulatedGamePoints << " game points)" << std::endl;
+	std::cout << winner.name << ": " << winner.currentRoundPoints << " | " << loser.name << ": " << loser.currentRoundPoints << std::endl;
+	std::cout << "Starting Round " << game.roundsHistory.size + 1 << "." << std::endl << std::endl;
+
+	winner.isLeading = true;
+	winner.overallPoints += accumulatedGamePoints;
+	winner.currentRoundPoints = 0;
+	winner.playedThisTurn = false;
+
+	loser.isLeading = false;
+	loser.currentRoundPoints = 0;
+	loser.playedThisTurn = false;
+
+	game.status = GameStatus::IN_BETWEEN_ROUNDS;
+	game.roundsHistory.history[game.roundsHistory.size - 1] = round;
+	game.roundsHistory.size++;
+}
