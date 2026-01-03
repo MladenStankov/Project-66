@@ -26,7 +26,11 @@ struct Player
 
 Player initPlayer(const char* name);
 
-void addCardToHand(Player& player, Card card);
+void addCardToHand(Player& player, Card card, Suit* trump);
 void removeCardFromHand(Player& player, size_t index);
 void printHand(const Player& player);
 void playCard(Round& round, Player& player, int cardIndex);
+
+// Sort all cards by power and suit. Separates red and black suits,
+// places trump suit first, places cards with same suit in order of power, ascending.
+void sortHand(Player& player, const Suit& trump);

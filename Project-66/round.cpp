@@ -13,12 +13,12 @@ void initialDeal(Round& round, Game& game)
 	{
 		for (size_t i = 0; i < 3; ++i)
 		{
-			addCardToHand(leadingPlayer, round.deck.cards[round.deck.topCardIndex++]);
+			addCardToHand(leadingPlayer, round.deck.cards[round.deck.topCardIndex++], nullptr);
 		}
 
 		for (size_t i = 0; i < 3; ++i)
 		{
-			addCardToHand(nonLeadingPlayer, round.deck.cards[round.deck.topCardIndex++]);
+			addCardToHand(nonLeadingPlayer, round.deck.cards[round.deck.topCardIndex++], nullptr);
 		}
 	}
 }
@@ -81,6 +81,9 @@ Round& startRound(Game& game)
 
 	// Swap bottom card with the last card so it is drawn last
 	swapCards(currentRound.deck.cards[currentRound.deck.topCardIndex], currentRound.deck.cards[MAX_DECK_SIZE - 1]);
+
+	sortHand(game.player1, currentRound.trump);
+	sortHand(game.player2, currentRound.trump);
 
 	return currentRound;
 }

@@ -2,6 +2,7 @@
 #include "card.h"
 #include "game.h"
 #include "round.h"
+#include "utils.h"
 #include <iostream>
 
 Player initPlayer(const char* name)
@@ -12,11 +13,16 @@ Player initPlayer(const char* name)
 	return newPlayer;
 }
 
-void addCardToHand(Player& player, Card card)
+void addCardToHand(Player& player, Card card, Suit* trump)
 {
 	if (player.hand.cardCount < 6)
 	{
 		player.hand.hand[player.hand.cardCount++] = card;
+	}
+
+	if (trump != nullptr)
+	{
+		sortHand(player, *trump);
 	}
 }
 
@@ -105,12 +111,12 @@ void playCard(Round& round, Player& player, int cardIndex)
 			if (round.deck.topCardIndex < MAX_DECK_SIZE)
 			{
 				Card c = round.deck.cards[round.deck.topCardIndex++];
-				addCardToHand(*winner, c);
+				addCardToHand(*winner, c, &round.trump);
 			}
 			if (round.deck.topCardIndex < MAX_DECK_SIZE)
 			{
 				Card c = round.deck.cards[round.deck.topCardIndex++];
-				addCardToHand(*loser, c);
+				addCardToHand(*loser, c, &round.trump);
 			}
 		}
 
@@ -119,5 +125,77 @@ void playCard(Round& round, Player& player, int cardIndex)
 		
 		winner->playedThisTurn = false;
 		loser->playedThisTurn = false;
+	}
+}
+
+bool isRed(Suit s)
+{
+	return s == Suit::DIAMONDS || s == Suit::HEARTS;
+}
+
+// This ensures Separated red and black suits
+int getSuitPriority(Suit s, Suit trump)
+{
+	if (s == trump) return 0;
+	
+	// Hardcoded preference to ensure proper alternation
+	switch (trump)
+	{
+		case Suit::CLUBS:
+			if (s == Suit::DIAMONDS) return 1;
+			if (s == Suit::SPADES) return 2;
+			if (s == Suit::HEARTS) return 3;
+			break;
+		case Suit::DIAMONDS:
+			if (s == Suit::CLUBS) return 1;
+			if (s == Suit::HEARTS) return 2;
+			if (s == Suit::SPADES) return 3;
+			break;
+		case Suit::HEARTS:
+			if (s == Suit::SPADES) return 1;
+			if (s == Suit::DIAMONDS) return 2;
+			if (s == Suit::CLUBS) return 3;
+			break;
+		case Suit::SPADES:
+			if (s == Suit::HEARTS) return 1;
+			if (s == Suit::CLUBS) return 2;
+			if (s == Suit::DIAMONDS) return 3;
+			break;
+	}
+}
+
+void sortHand(Player& player, const Suit& trump)
+{
+	if(player.hand.cardCount < 2) return;
+
+	for (size_t i = 0; i < player.hand.cardCount; i++)
+	{
+		for (size_t j = 0; j < player.hand.cardCount - 1; j++)
+		{
+			Card& c1 = player.hand.hand[j];
+			Card& c2 = player.hand.hand[j + 1];
+
+			int p1 = getSuitPriority(c1.suit, trump);
+			int p2 = getSuitPriority(c2.suit, trump);
+
+			bool swap = false;
+
+			if (p1 > p2)
+			{
+				swap = true;
+			}
+			else if (p1 == p2)
+			{
+				if (getCardValue(c1) > getCardValue(c2))
+				{
+					swap = true;
+				}
+			}
+
+			if (swap)
+			{
+				swapCards(c1, c2);
+			}
+		}
 	}
 }

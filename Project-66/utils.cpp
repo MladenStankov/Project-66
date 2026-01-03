@@ -81,3 +81,14 @@ char* getNextWord(char* str)
         return str;
     }
 }
+
+int customAtoi(char* str)
+{
+	int result = 0;
+	while (*str)
+	{
+		result = result * 10 + (*str - '0');
+		str++;
+	}
+	return result;
+}

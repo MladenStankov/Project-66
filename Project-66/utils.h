@@ -12,3 +12,5 @@ bool compareWords(const char* str1, const char* str2);
 void cleanString(char* str);
 
 char* getNextWord(char* str);
+
+int customAtoi(char* str);

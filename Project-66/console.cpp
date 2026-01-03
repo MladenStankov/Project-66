@@ -1,6 +1,5 @@
 #include <iostream>
 #include <windows.h>
-#include <cstdlib>
 #include "console.h"
 #include "utils.h"
 #include "round.h"
@@ -132,7 +131,7 @@ void processCommand(char* command, Game& game)
 			std::cout << "Usage: play <index>" << std::endl;
 			return;
 		}
-		int cardIndex = atoi(nextArg);
+		int cardIndex = customAtoi(nextArg);
 
 		Player& player = getThePlayerThatIsOnTurn(game);
 		Round& currentRound = getCurrentRound(game);
