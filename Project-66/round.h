@@ -7,11 +7,10 @@ constexpr size_t MAX_DECK_SIZE = 24;
 
 struct Game;
 
-enum class RoundState {
+enum class RoundStatus {
 	NOT_STARTED,
 	STARTED,
 	IN_MIDDLE,
-	CLOSED,
 	ENDED,
 };
 
@@ -37,7 +36,7 @@ struct Round {
 	Suit trump;
 	Card bottomCard;
 	Trick lastTrick, currentTrick;
-	RoundState state = RoundState::STARTED;
+	RoundStatus status = RoundStatus::STARTED;
 	RoundConclusion conclusion = {};
 };
 
@@ -49,7 +48,7 @@ Round& startRound(Game& game);
 void initialDeal(Round& round, Game& game);
 void printLastTrick(const Round& round);
 void printRoundInfo(const Round& round);
-void changeRoundState(Round& round, RoundState state);
+void changeRoundState(Round& round, RoundStatus status);
 bool switchNine(Round& round, Player& player);
 bool announceMarriage(Round& round, Player& player, Suit suit);
 

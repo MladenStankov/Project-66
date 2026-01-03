@@ -35,7 +35,7 @@ void printRoundsHistory(const Game& game)
     for (size_t i = 0; i < game.roundsHistory.size; i++)
     {
         Round r = game.roundsHistory.history[i];
-        if (r.state == RoundState::ENDED)
+        if (r.status == RoundStatus::ENDED)
         {
             std::cout << "Round " << i + 1 << ": " << std::endl;
             std::cout << "Winner - "

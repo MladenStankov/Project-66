@@ -119,9 +119,9 @@ void printRoundInfo(const Round& round)
 	std::cout << "Cards left in deck: " << MAX_DECK_SIZE - round.deck.topCardIndex << std::endl;
 }
 
-void changeRoundState(Round& round, RoundState state)
+void changeRoundState(Round& round, RoundStatus status)
 {
-	round.state = state;
+	round.status = status;
 }
 
 bool switchNine(Round& round, Player& player)
@@ -154,7 +154,7 @@ bool announceMarriage(Round& round, Player& player, Suit suit)
 
 void endRound(Round& round, Game& game, Player* stopper)
 {
-	round.state = RoundState::ENDED;
+	round.status = RoundStatus::ENDED;
 
 	Player* winner = nullptr;
 	Player* loser = nullptr;

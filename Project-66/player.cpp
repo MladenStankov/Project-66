@@ -144,9 +144,9 @@ bool playCard(Round& round, Player& player, int cardIndex)
 		winner->playedThisTurn = false;
 		loser->playedThisTurn = false;
 
-		if(round.state == RoundState::STARTED)
+		if(round.status == RoundStatus::STARTED)
 		{
-			changeRoundState(round, RoundState::IN_MIDDLE);
+			changeRoundState(round, RoundStatus::IN_MIDDLE);
 		}
 
 		return true;

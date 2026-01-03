@@ -160,7 +160,7 @@ void switchNineCommand(Game& game)
 	}
 
 	Round& round = getCurrentRound(game);
-	if (round.state != RoundState::IN_MIDDLE)
+	if (round.status != RoundStatus::IN_MIDDLE)
 	{
 		std::cout << "Round must not be closed and you should have won atleast one turn" << std::endl;
 		return;
@@ -200,7 +200,7 @@ void marriageCommand(Game& game, char* command)
 	}
 
 	Round& round = getCurrentRound(game);
-	if (round.state != RoundState::IN_MIDDLE)
+	if (round.status != RoundStatus::IN_MIDDLE)
 	{
 		std::cout << "You should have won atleast one turn" << std::endl;
 		return;
@@ -255,7 +255,7 @@ void lastTrickCommand(Game& game)
 		return;
 	}
 	Round& round = getCurrentRound(game);
-	if (round.state == RoundState::STARTED)
+	if (round.status == RoundStatus::STARTED)
 	{
 		std::cout << "Round just started. There is no last trick yet" << std::endl;
 		return;
