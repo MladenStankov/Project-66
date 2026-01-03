@@ -238,6 +238,23 @@ void marriageCommand(Game& game, char* command)
 
 }
 
+void lastTrickCommand(Game& game)
+{
+	if (game.status != GameStatus::IN_ROUND)
+	{
+		std::cout << "Game is not in a round" << std::endl;
+		return;
+	}
+	Round& round = getCurrentRound(game);
+	if (round.state == RoundState::STARTED)
+	{
+		std::cout << "Round just started. There is no last trick yet" << std::endl;
+		return;
+	}
+
+	printLastTrick(round);
+}
+
 void processCommand(char* command, Game& game)
 {
 	system("CLS");
@@ -276,12 +293,7 @@ void processCommand(char* command, Game& game)
 	}
 	else if (compareWords(command, "last-trick"))
 	{
-		if (game.status != GameStatus::IN_ROUND)
-		{
-			std::cout << "Game is not in a round" << std::endl;
-			return;
-		}
-		//showLastTrick(game);
+		lastTrickCommand(game);
 	}
 	else if (compareWords(command, "info"))
 	{

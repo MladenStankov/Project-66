@@ -92,12 +92,12 @@ void printLastTrick(const Round& round)
 {
 	const Trick trick = round.lastTrick;
 
-	std::cout << "(Lead)" << trick.leadPlayer->name << ": ";
+	std::cout << trick.leadPlayer->name << ": ";
 	printCard(trick.leadPlayerCard);
-	std::cout << std::endl;
+	std::cout << " (lead)" << std::endl;
 
-	std::cout << "(Other)" << trick.otherPlayer->name << ": ";
-	printCard(trick.otherPlayerCard);
+	std::cout << trick.nonLeadPlayer->name << ": ";
+	printCard(trick.nonLeadCard);
 	std::cout << std::endl;
 
 	std::cout << "Winner: " << trick.winner->name;

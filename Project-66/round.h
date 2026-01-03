@@ -16,8 +16,8 @@ enum class RoundState {
 };
 
 struct Trick {
-	Card leadPlayerCard, otherPlayerCard;
-	Player* leadPlayer = nullptr, *otherPlayer = nullptr;
+	Card leadPlayerCard, nonLeadCard;
+	Player* leadPlayer = nullptr, *nonLeadPlayer = nullptr;
 	Player* winner;
 };
 

@@ -100,20 +100,20 @@ void playCard(Round& round, Player& player, int cardIndex)
 	else
 	{
 		// Second card in the trick
-		currentTrick.otherPlayer = &player;
-		currentTrick.otherPlayerCard = playedCard;
+		currentTrick.nonLeadPlayer = &player;
+		currentTrick.nonLeadCard = playedCard;
 
 		// Evaluate trick
-		bool leadWins = beats(currentTrick.leadPlayerCard, currentTrick.otherPlayerCard, round.trump);
+		bool leadWins = beats(currentTrick.leadPlayerCard, currentTrick.nonLeadCard, round.trump);
 		
-		Player* winner = leadWins ? currentTrick.leadPlayer : currentTrick.otherPlayer;
-		Player* loser = leadWins ? currentTrick.otherPlayer : currentTrick.leadPlayer;
+		Player* winner = leadWins ? currentTrick.leadPlayer : currentTrick.nonLeadPlayer;
+		Player* loser = leadWins ? currentTrick.nonLeadPlayer : currentTrick.leadPlayer;
 
 		currentTrick.winner = winner;
 
 		std::cout << winner->name << " wins the trick!";
 		
-		unsigned int points = getCardValue(currentTrick.leadPlayerCard) + getCardValue(currentTrick.otherPlayerCard);
+		unsigned int points = getCardValue(currentTrick.leadPlayerCard) + getCardValue(currentTrick.nonLeadCard);
 		std::cout << " (+" << points << " points)";
 		std::cout << std::endl;
 		std::cout << std::endl;
