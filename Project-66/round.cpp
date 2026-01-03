@@ -152,6 +152,50 @@ bool announceMarriage(Round& round, Player& player, Suit suit)
 	return true;
 }
 
+void cleanupRound(Round& round, Game& game, Player* winner, Player* loser, int accumulatedGamePoints)
+{
+	winner->isLeading = true;
+	winner->overallPoints += accumulatedGamePoints;
+	winner->currentRoundPoints = 0;
+	winner->playedThisTurn = false;
+	winner->hasMarriage = false;
+
+	loser->isLeading = false;
+	loser->currentRoundPoints = 0;
+	loser->playedThisTurn = false;
+	loser->hasMarriage = false;
+
+	game.status = GameStatus::IN_BETWEEN_ROUNDS;
+	game.roundsHistory.history[game.roundsHistory.size - 1] = round;
+	game.roundsHistory.size++;
+
+	// Deleting the current hand
+	winner->hand = {}, loser->hand = {};
+}
+
+void createConclusion(Round& round, Player* winner, Player* loser, int accumulatedGamePoints)
+{
+	round.conclusion.loser = loser;
+	round.conclusion.winner = winner;
+	round.conclusion.loserPoints = loser->currentRoundPoints;
+	round.conclusion.winnerPoints = winner->currentRoundPoints;
+	round.conclusion.accumulatedPoints = accumulatedGamePoints;
+}
+
+void printRoundConclusion(const Round& round, size_t roundNumber)
+{
+	std::cout << "Round " << roundNumber << " ended." << std::endl;
+	if (round.playerWhoClosed)
+	{
+		std::cout << round.playerWhoClosed->name << " closed the game!" << std::endl;
+	}
+
+	std::cout << "Calculating points..." << std::endl;
+	std::cout << round.conclusion.winner->name << " wins the round! (" << round.conclusion.accumulatedPoints << " game points)" << std::endl;
+	std::cout << round.conclusion.winner->name << ": " << round.conclusion.winnerPoints << " | " << round.conclusion.loser->name << ": " << round.conclusion.loserPoints << std::endl;
+	std::cout << "Starting Round " << roundNumber + 1 << "." << std::endl << std::endl;
+}
+
 void endRound(Round& round, Game& game, Player* stopper)
 {
 	round.status = RoundStatus::ENDED;
@@ -200,36 +244,9 @@ void endRound(Round& round, Game& game, Player* stopper)
 		}
 	}
 
-	round.conclusion.loser = loser;
-	round.conclusion.winner = winner;
-	round.conclusion.loserPoints = loser->currentRoundPoints;
-	round.conclusion.winnerPoints = winner->currentRoundPoints;
-	round.conclusion.accumulatedPoints = accumulatedGamePoints;
+	createConclusion(round, winner, loser, accumulatedGamePoints);
 
-	std::cout << "Round " << game.roundsHistory.size << " ended." << std::endl;
-	if (stopper)
-	{
-		std::cout << stopper->name << " stopped the game!" << std::endl;
-	}
+	printRoundConclusion(round, game.roundsHistory.size);
 
-	std::cout << "Calculating points..." << std::endl;
-	std::cout << winner->name << " wins the round! (+" << accumulatedGamePoints << " game points)" << std::endl;
-	std::cout << winner->name << ": " << winner->currentRoundPoints << " | " << loser->name << ": " << loser->currentRoundPoints << std::endl;
-	std::cout << "Starting Round " << game.roundsHistory.size + 1 << "." << std::endl << std::endl;
-
-	winner->isLeading = true;
-	winner->overallPoints += accumulatedGamePoints;
-	winner->currentRoundPoints = 0;
-	winner->playedThisTurn = false;
-
-	loser->isLeading = false;
-	loser->currentRoundPoints = 0;
-	loser->playedThisTurn = false;
-
-	game.status = GameStatus::IN_BETWEEN_ROUNDS;
-	game.roundsHistory.history[game.roundsHistory.size - 1] = round;
-	game.roundsHistory.size++;
-
-	// Deleting the current hand
-	winner->hand = {}, loser->hand = {};
+	cleanupRound(round, game, winner, loser, accumulatedGamePoints);
 }

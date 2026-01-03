@@ -352,6 +352,37 @@ void closeCommand(Game& game)
 	std::cout << player.name << " closed the game!" << std::endl;
 }
 
+void surrenderCommand(Game& game)
+{
+	if (game.status != GameStatus::IN_ROUND)
+	{
+		std::cout << "Game is not in a round" << std::endl;
+		return;
+	}
+
+	Player& currentPlayer = getThePlayerThatIsOnTurn(game);
+
+	std::cout << currentPlayer.name << " surrendered the round" << std::endl;
+
+	Round& round = getCurrentRound(game);
+	endRound(round, game, &currentPlayer);
+}
+
+void surrenderForeverCommand(Game& game)
+{
+	if (game.status == GameStatus::NOT_STARTED)
+	{
+		std::cout << "Game has not started" << std::endl;
+		return;
+	}
+	changeGameStatus(game, GameStatus::ENDED);
+	Player& playerSurrendered = getThePlayerThatIsOnTurn(game);
+	Player gameWinner = playerSurrendered.isLeading ? getNonLeadingPlayer(game) : getLeadingPlayer(game);
+
+	std::cout << playerSurrendered.name << " surrendered" << std::endl;
+	std::cout << gameWinner.name << " wins the whole game. Congratulations!" << std::endl;
+}
+
 void processCommand(char* command, Game& game)
 {
 	system("CLS");
@@ -410,21 +441,11 @@ void processCommand(char* command, Game& game)
 	}
 	else if (compareWords(command, "surrender"))
 	{
-		if (game.status != GameStatus::IN_ROUND)
-		{
-			std::cout << "Game is not in a round" << std::endl;
-			return;
-		}
-		//surrender(game);
+		surrenderCommand(game);
 	}
 	else if (compareWords(command, "surrender-forever"))
 	{
-		if (game.status != GameStatus::IN_BETWEEN_ROUNDS || game.status != GameStatus::IN_ROUND)
-		{
-			std::cout << "Game is not in a round" << std::endl;
-			return;
-		}
-		//surrenderForever(game);
+		surrenderForeverCommand(game);
 	}
 	else if (compareWords(command, "save"))
 	{

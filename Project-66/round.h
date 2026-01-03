@@ -56,3 +56,4 @@ bool switchNine(Round& round, Player& player);
 bool announceMarriage(Round& round, Player& player, Suit suit);
 
 void endRound(Round& round, Game& game, Player* stopper = nullptr);
+void cleanupRound(Round& round, Game& game, Player* winner, Player* loser, int accumulatedGamePoints);
