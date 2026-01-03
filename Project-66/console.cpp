@@ -293,6 +293,25 @@ void historyCommand(Game& game)
 	printRoundsHistory(game);
 }
 
+void stopCommand(Game& game)
+{
+	if (game.status != GameStatus::IN_ROUND)
+	{
+		std::cout << "Game is not in a round" << std::endl;
+		return;
+	}
+
+	Player& player = getThePlayerThatIsOnTurn(game);
+	if (!player.isLeading)
+	{
+		std::cout << "You must be leading to stop the round" << std::endl;
+		return;
+	}
+
+	Round& round = getCurrentRound(game);
+	endRound(round, game, &player);
+}
+
 void processCommand(char* command, Game& game)
 {
 	system("CLS");
@@ -347,12 +366,7 @@ void processCommand(char* command, Game& game)
 	}
 	else if (compareWords(command, "stop"))
 	{
-		if (game.status != GameStatus::IN_ROUND)
-		{
-			std::cout << "Game is not in a round" << std::endl;
-			return;
-		}
-		//stop(game);
+		stopCommand(game);
 	}
 	else if (compareWords(command, "surrender"))
 	{

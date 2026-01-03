@@ -61,16 +61,6 @@ Round& startRound(Game& game)
 				break;
 		}
 	}
-	else
-	{
-		Round lastRound = game.roundsHistory.history[roundHistorySize - 2];
-		Player& winner = *lastRound.conclusion.winner;
-		Player& loser = *lastRound.conclusion.loser;
-
-		winner.isLeading = true;
-		loser.isLeading = false;
-	}
-
 
 	shuffleDeck(currentRound.deck);
 
@@ -162,37 +152,66 @@ bool announceMarriage(Round& round, Player& player, Suit suit)
 	return true;
 }
 
-void endRound(Round& round, Game& game)
+void endRound(Round& round, Game& game, Player* stopper)
 {
 	round.state = RoundState::ENDED;
 
-	Player& winner = (game.player1.currentRoundPoints >= game.player2.currentRoundPoints) ? game.player1 : game.player2;
-	Player& loser = (game.player1.currentRoundPoints < game.player2.currentRoundPoints) ? game.player1 : game.player2;
+	Player* winner = nullptr;
+	Player* loser = nullptr;
+	int accumulatedGamePoints = 0;
 
-	round.conclusion.loser = &loser;
-	round.conclusion.winner = &winner;
-	round.conclusion.loserPoints = loser.currentRoundPoints;
-	round.conclusion.winnerPoints = winner.currentRoundPoints;
+	if (stopper != nullptr)
+	{
+		if (stopper->currentRoundPoints >= 66)
+		{
+			winner = stopper;
+			loser = (stopper == &game.player1) ? &game.player2 : &game.player1;
+			accumulatedGamePoints = (loser->currentRoundPoints >= 33) ? 1 : 2;
+		}
+		else
+		{
+			loser = stopper;
+			winner = (stopper == &game.player1) ? &game.player2 : &game.player1;
+			accumulatedGamePoints = 3;
+		}
+	}
+	else
+	{
+		winner = (game.player1.currentRoundPoints >= game.player2.currentRoundPoints) ? &game.player1 : &game.player2;
+		loser = (game.player1.currentRoundPoints < game.player2.currentRoundPoints) ? &game.player1 : &game.player2;
+		accumulatedGamePoints = (loser->currentRoundPoints >= 33) ? 1 : 2;
+	}
 
-	int accumulatedGamePoints = (loser.currentRoundPoints >= 33) ? 1 : 2;
+	round.conclusion.loser = loser;
+	round.conclusion.winner = winner;
+	round.conclusion.loserPoints = loser->currentRoundPoints;
+	round.conclusion.winnerPoints = winner->currentRoundPoints;
 	round.conclusion.accumulatedPoints = accumulatedGamePoints;
 
 	std::cout << "Round " << game.roundsHistory.size << " ended." << std::endl;
+	if (stopper)
+	{
+		std::cout << stopper->name << " stopped the game!" << std::endl;
+	}
+
 	std::cout << "Calculating points..." << std::endl;
-	std::cout << winner.name << " wins the round! (+" << accumulatedGamePoints << " game points)" << std::endl;
-	std::cout << winner.name << ": " << winner.currentRoundPoints << " | " << loser.name << ": " << loser.currentRoundPoints << std::endl;
+	std::cout << winner->name << " wins the round! (+" << accumulatedGamePoints << " game points)" << std::endl;
+	std::cout << winner->name << ": " << winner->currentRoundPoints << " | " << loser->name << ": " << loser->currentRoundPoints << std::endl;
 	std::cout << "Starting Round " << game.roundsHistory.size + 1 << "." << std::endl << std::endl;
 
-	winner.isLeading = true;
-	winner.overallPoints += accumulatedGamePoints;
-	winner.currentRoundPoints = 0;
-	winner.playedThisTurn = false;
+	winner->isLeading = true;
+	winner->overallPoints += accumulatedGamePoints;
+	winner->currentRoundPoints = 0;
+	winner->playedThisTurn = false;
 
-	loser.isLeading = false;
-	loser.currentRoundPoints = 0;
-	loser.playedThisTurn = false;
+	loser->isLeading = false;
+	loser->currentRoundPoints = 0;
+	loser->playedThisTurn = false;
 
 	game.status = GameStatus::IN_BETWEEN_ROUNDS;
 	game.roundsHistory.history[game.roundsHistory.size - 1] = round;
 	game.roundsHistory.size++;
+
+	// Deleting the current hand
+	winner->hand = {}, loser->hand = {};
 }

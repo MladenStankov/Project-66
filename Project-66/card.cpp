@@ -52,8 +52,8 @@ bool beats(const Card& c1, const Card& c2, const Suit& trump)
 	if (c1.suit == trump && c2.suit != trump) return true;
 	if (c1.suit != trump && c2.suit == trump) return false;
 
-	if (c1.suit == c2.suit)return ((int)c1.rank) > ((int)c2.rank) ? true : false;
-	return true;
+	if (c1.suit == c2.suit)return getCardValue(c1) > getCardValue(c2);
+	else return true;
 }
 
 unsigned int getCardValue(const Card& card)
