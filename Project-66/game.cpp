@@ -93,6 +93,40 @@ void printGameInfo(const Game& game)
 {
     std::cout << "Current Round: #" << game.roundsHistory.size << std::endl;
 
-    std::cout << game.player1.name << " round wins: " << game.player1.overallPoints << std::endl;
-    std::cout << game.player2.name << " round wins: " << game.player2.overallPoints << std::endl;
+    std::cout << game.player1.name << " round wins: " << game.player1.gamePoints << std::endl;
+    std::cout << game.player2.name << " round wins: " << game.player2.gamePoints << std::endl;
+}
+
+void changeGameSettings(Game& game, GameSettingsType type, unsigned int value)
+{
+    switch (type)
+    {
+        case GameSettingsType::TARGET_POINTS:
+        {
+            game.settings.targetPoints = value;
+            game.roundsHistory.history = new Round[value];
+            break;
+        }
+        case GameSettingsType::NON_TRUMP_MARRIAGE_POINTS:
+        {
+            game.settings.nonTrumpMarriagePoints = value;
+            break;
+        }
+        case GameSettingsType::TRUMP_MARRIAGE_POINTS:
+        {
+            game.settings.trumpMarriagePoints = value;
+            break;
+        }
+        case GameSettingsType::SHOW_PLAYER_POINTS:
+        {
+            game.settings.showPlayerPoints = value;
+            break;
+        }
+        case GameSettingsType::LAST_TRICK_BONUS_POINTS:
+        {
+            game.settings.lastTrickBonusPoints = value;
+            break;
+        }
+        default: break;
+    }
 }

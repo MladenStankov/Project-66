@@ -12,9 +12,10 @@ enum class GameStatus {
 
 enum class GameSettingsType {
 	TARGET_POINTS = 1,
-	MARRIAGE_POINTS = 2,
-	SHOW_PLAYER_POINTS = 3,
-	LAST_TRICK_BONUS_POINTS = 4,
+	TRUMP_MARRIAGE_POINTS = 2,
+	NON_TRUMP_MARRIAGE_POINTS = 3,
+	SHOW_PLAYER_POINTS = 4,
+	LAST_TRICK_BONUS_POINTS = 5,
 };
 
 struct GameSettings {	
@@ -38,7 +39,7 @@ struct Game {
 
 GameSettings initGameSettings();
 
-//void changeGameSettings(GameSettings& settings, GameSettingsType type, unsigned int value);
+void changeGameSettings(Game& game, GameSettingsType type, unsigned int value);
 
 Game initGame(const GameSettings& settings);
 

@@ -50,10 +50,10 @@ Round& startRound(Game& game);
 
 void initialDeal(Round& round, Game& game);
 void printLastTrick(const Round& round);
-void printRoundInfo(const Round& round);
+void printRoundInfo(const Game& game, const Round& round);
 void changeRoundState(Round& round, RoundStatus status);
 bool switchNine(Round& round, Player& player);
-bool announceMarriage(Round& round, Player& player, Suit suit);
+bool announceMarriage(Game& game, Round& round, Player& player, Suit suit);
 
 void endRound(Round& round, Game& game, Player* stopper = nullptr);
 void cleanupRound(Round& round, Game& game, Player* winner, Player* loser, int accumulatedGamePoints);

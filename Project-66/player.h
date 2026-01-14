@@ -1,5 +1,6 @@
 #pragma once
 #include "card.h"
+#include <cstddef>
 
 struct Round;
 
@@ -17,8 +18,8 @@ struct Player
 	const char* name;
 	PlayerHand hand;
 
-	unsigned int currentRoundPoints;
-	unsigned int overallPoints;
+	unsigned int currentPoints;
+	unsigned int gamePoints;
 
 	bool isLeading;
 	bool playedThisTurn = false;
@@ -33,7 +34,7 @@ void removeCardFromHand(Player& player, size_t index);
 void printHand(const Player& player);
 
 // Returns false if the deck cards have ended and the round must end.
-bool playCard(Round& round, Player& player, int cardIndex);
+bool playCard(Game& game, Round& round, Player& player, int cardIndex);
 
 // Sort all cards by power and suit. Separates red and black suits,
 // places trump suit first, places cards with same suit in order of power, ascending.

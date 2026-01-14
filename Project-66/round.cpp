@@ -112,8 +112,13 @@ void printBottomCard(const Round& round)
 	std::cout << std::endl;
 }
 
-void printRoundInfo(const Round& round)
+void printRoundInfo(const Game& game, const Round& round)
 {
+	if (game.settings.showPlayerPoints)
+	{
+		std::cout << game.player1.name << " current round points: " << game.player1.currentPoints << std::endl;
+		std::cout << game.player2.name << " current round points: " << game.player2.currentPoints << std::endl;
+	}
 	printTrumpSuit(round);
 	printBottomCard(round);
 	std::cout << "Cards left in deck: " << MAX_DECK_SIZE - round.deck.topCardIndex << std::endl;
@@ -137,7 +142,7 @@ bool switchNine(Round& round, Player& player)
 	else return false;
 }
 
-bool announceMarriage(Round& round, Player& player, Suit suit)
+bool announceMarriage(Game& game, Round& round, Player& player, Suit suit)
 {
 	size_t temp;
 	if (!findCardInHand(player, suit, Rank::KING, temp) || !findCardInHand(player, suit, Rank::QUEEN, temp))
@@ -146,8 +151,8 @@ bool announceMarriage(Round& round, Player& player, Suit suit)
 	player.hasMarriage = true;
 	player.marriageSuit = suit;
 
-	if (suit == round.trump) player.currentRoundPoints += 40;
-	else player.currentRoundPoints += 20;
+	if (suit == round.trump) player.currentPoints += game.settings.trumpMarriagePoints;
+	else player.currentPoints += game.settings.nonTrumpMarriagePoints;
 
 	return true;
 }
@@ -155,13 +160,13 @@ bool announceMarriage(Round& round, Player& player, Suit suit)
 void cleanupRound(Round& round, Game& game, Player* winner, Player* loser, int accumulatedGamePoints)
 {
 	winner->isLeading = true;
-	winner->overallPoints += accumulatedGamePoints;
-	winner->currentRoundPoints = 0;
+	winner->gamePoints += accumulatedGamePoints;
+	winner->currentPoints = 0;
 	winner->playedThisTurn = false;
 	winner->hasMarriage = false;
 
 	loser->isLeading = false;
-	loser->currentRoundPoints = 0;
+	loser->currentPoints = 0;
 	loser->playedThisTurn = false;
 	loser->hasMarriage = false;
 
@@ -177,21 +182,22 @@ void createConclusion(Round& round, Player* winner, Player* loser, int accumulat
 {
 	round.conclusion.loser = loser;
 	round.conclusion.winner = winner;
-	round.conclusion.loserPoints = loser->currentRoundPoints;
-	round.conclusion.winnerPoints = winner->currentRoundPoints;
+	round.conclusion.loserPoints = loser->currentPoints;
+	round.conclusion.winnerPoints = winner->currentPoints;
 	round.conclusion.accumulatedPoints = accumulatedGamePoints;
 }
 
 void printRoundConclusion(const Round& round, size_t roundNumber)
 {
 	std::cout << "Round " << roundNumber << " ended." << std::endl;
+	printSeparatingLine();
 	if (round.playerWhoClosed)
 	{
 		std::cout << round.playerWhoClosed->name << " closed the game!" << std::endl;
 	}
 
-	std::cout << "Calculating points..." << std::endl;
-	std::cout << round.conclusion.winner->name << " wins the round! (" << round.conclusion.accumulatedPoints << " game points)" << std::endl;
+	std::cout << round.conclusion.winner->name << " wins the round! (+" << round.conclusion.accumulatedPoints << " game points)" << std::endl;
+	std::cout << "Round Points" << std::endl;
 	std::cout << round.conclusion.winner->name << ": " << round.conclusion.winnerPoints << " | " << round.conclusion.loser->name << ": " << round.conclusion.loserPoints << std::endl;
 	std::cout << "Starting Round " << roundNumber + 1 << "." << std::endl << std::endl;
 }
@@ -206,11 +212,11 @@ void endRound(Round& round, Game& game, Player* stopper)
 
 	if (stopper != nullptr)
 	{
-		if (stopper->currentRoundPoints >= 66)
+		if (stopper->currentPoints >= 66)
 		{
 			winner = stopper;
 			loser = (stopper == &game.player1) ? &game.player2 : &game.player1;
-			accumulatedGamePoints = (loser->currentRoundPoints >= 33) ? 1 : 2;
+			accumulatedGamePoints = (loser->currentPoints >= 33) ? 1 : 2;
 		}
 		else
 		{
@@ -223,11 +229,11 @@ void endRound(Round& round, Game& game, Player* stopper)
 	{
 		if (round.playerWhoClosed != nullptr)
 		{
-			if (round.playerWhoClosed->currentRoundPoints >= 66)
+			if (round.playerWhoClosed->currentPoints >= 66)
 			{
 				winner = round.playerWhoClosed;
 				loser = (winner == &game.player1) ? &game.player2 : &game.player1;
-				accumulatedGamePoints = (loser->currentRoundPoints >= 33) ? 1 : 2;
+				accumulatedGamePoints = (loser->currentPoints >= 33) ? 1 : 2;
 			}
 			else
 			{
@@ -238,9 +244,9 @@ void endRound(Round& round, Game& game, Player* stopper)
 		}
 		else
 		{
-			winner = (game.player1.currentRoundPoints >= game.player2.currentRoundPoints) ? &game.player1 : &game.player2;
-			loser = (game.player1.currentRoundPoints < game.player2.currentRoundPoints) ? &game.player1 : &game.player2;
-			accumulatedGamePoints = (loser->currentRoundPoints >= 33) ? 1 : 2;
+			winner = (game.player1.currentPoints >= game.player2.currentPoints) ? &game.player1 : &game.player2;
+			loser = (game.player1.currentPoints < game.player2.currentPoints) ? &game.player1 : &game.player2;
+			accumulatedGamePoints = (loser->currentPoints >= 33) ? 1 : 2;
 		}
 	}
 
@@ -249,4 +255,10 @@ void endRound(Round& round, Game& game, Player* stopper)
 	printRoundConclusion(round, game.roundsHistory.size);
 
 	cleanupRound(round, game, winner, loser, accumulatedGamePoints);
+
+	if (winner->gamePoints >= game.settings.targetPoints)
+	{
+		game.status = GameStatus::ENDED;
+		std::cout << winner->name << " reached the target points!" << std::endl;
+	}
 }

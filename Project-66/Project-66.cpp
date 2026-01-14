@@ -20,6 +20,7 @@ int main()
     {
         if (game.status == GameStatus::ENDED)
         {
+            delete game.roundsHistory.history;
             std::cout << "Game ended. Thank you for playing!" << std::endl;
             return 0;
         }

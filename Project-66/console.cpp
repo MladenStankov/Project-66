@@ -57,11 +57,11 @@ void showRulesCommand(const GameSettings& gameSettings)
 	std::cout << "Each player gets 6 cards. The Trump suit is chosen at random." << std::endl;
 	std::cout << "Card values: Ace=11, 10=10, King=4, Queen=3, Jack=2, 9=0." << std::endl;
 
-	std::cout << "A marriage (K+Q of the same suit) gives:" << gameSettings.nonTrumpMarriagePoints << "points, ";
+	std::cout << "A marriage (K+Q of the same suit) gives: " << gameSettings.nonTrumpMarriagePoints << " points, ";
 	std::cout << "or " << gameSettings.trumpMarriagePoints << " if it's the trump suit." << std::endl;
 
 	std::cout << "The first player to reach 66 points wins the round." << std::endl;
-	std::cout << "The first player to reach " << gameSettings.targetPoints << " rounds wins the game." << std::endl;
+	std::cout << "The first player to win " << gameSettings.targetPoints << " round/s wins the game." << std::endl;
 }
 
 void startCommand(Game& game)
@@ -84,11 +84,56 @@ void startCommand(Game& game)
 
 		printSeparatingLine();
 
-		printRoundInfo(round);
+		printRoundInfo(game, round);
 	}
 	else {
 		std::cout << "Game is already in progress" << std::endl;
 	}
+}
+
+void helperSettingsCommand(Game& game, int choice)
+{
+	switch (choice)
+	{
+		case 1:
+		{
+			int targetPoints;
+			std::cout << "Type integer value for target points: ";
+			std::cin >> targetPoints;
+			changeGameSettings(game, GameSettingsType::TARGET_POINTS, targetPoints);
+			break;
+		}
+		case 2:
+		{
+			int nonTrumpMarriagePoints, trumpMarriagePoints;
+			std::cout << "Type integer value for non-trump marriage points: ";
+			std::cin >> nonTrumpMarriagePoints;
+			std::cout << "Type integer value for trump marriage points: ";
+			std::cin >> trumpMarriagePoints;
+
+			changeGameSettings(game, GameSettingsType::NON_TRUMP_MARRIAGE_POINTS, nonTrumpMarriagePoints);
+			changeGameSettings(game, GameSettingsType::TRUMP_MARRIAGE_POINTS, trumpMarriagePoints);
+			break;
+		}
+		case 3:
+		{
+			bool showPlayerPoints;
+			std::cout << "Type value for showing player points (0/1): ";
+			std::cin >> showPlayerPoints;
+			changeGameSettings(game, GameSettingsType::SHOW_PLAYER_POINTS, showPlayerPoints);
+			break;
+		}
+		case 4:
+		{
+			bool lastTrickBonusPoints;
+			std::cout << "Type value for last trick bonus points (0/1): ";
+			std::cin >> lastTrickBonusPoints;
+			changeGameSettings(game, GameSettingsType::LAST_TRICK_BONUS_POINTS, lastTrickBonusPoints);
+			break;
+		}
+		default: std::cout << "Unexpected choice" << std::endl; return;
+	}
+	std::cout << std::endl << "Successfully changed settings" << std::endl;
 }
 
 void settingsCommand(Game& game)
@@ -96,11 +141,46 @@ void settingsCommand(Game& game)
 	if (game.status != GameStatus::NOT_STARTED)
 	{
 		std::cout << "Game already started. Cannot change settings" << std::endl;
+		return;
 	}
-	else
+	
+	std::cout << "1) Target points to win [" << game.settings.targetPoints << "]" << std::endl;
+
+	std::cout << "2) Marriage points (non-trump/trump) [" 
+		<< game.settings.nonTrumpMarriagePoints 
+		<< "/" << game.settings.trumpMarriagePoints << "]" << std::endl;
+
+	std::cout << "3) Show players' points [" << (game.settings.showPlayerPoints ? "on" : "off") << "]" << std::endl;
+	std::cout << "4) Last trick +10 [" << (game.settings.lastTrickBonusPoints ? "on" : "off") << "]" << std::endl;
+
+
+	while (true)
 	{
-		std::cout << "TODO" << std::endl;
+		std::cout << "Enter number to change or 'back' to return: ";
+		char input[MAX_COMMAND_LEN] = "";
+		std::cin.getline(input, MAX_COMMAND_LEN);
+
+		std::cout << std::endl;
+
+		if (compareWords(input, "back")) return;
+		else
+		{
+			int choice = customAtoi(input);
+			if (choice < 1 || choice > 4)
+			{
+				std::cout << "Incorrect value" << std::endl;
+				continue;
+			}
+			else
+			{
+				helperSettingsCommand(game, choice);
+				std::cin.clear();
+				std::cin.ignore(1000, '\n');
+				return;
+			}
+		}
 	}
+
 }
 
 void handCommand(Game& game)
@@ -145,7 +225,7 @@ void playCommand(Game& game, char* command)
 
 	Player& player = getThePlayerThatIsOnTurn(game);
 	Round& currentRound = getCurrentRound(game);
-	if (playCard(currentRound, player, cardIndex) == false)
+	if (playCard(game, currentRound, player, cardIndex) == false)
 	{
 		endRound(currentRound, game);
 	}
@@ -227,14 +307,14 @@ void marriageCommand(Game& game, char* command)
 		return;
 	}
 
-	if (announceMarriage(round, player, suit) != true)
+	if (announceMarriage(game, round, player, suit) != true)
 	{
 		std::cout << "You dont have a marriage of " << getSuitString(suit) << std::endl;
 		return;
 	}
 
 	std::cout << "You announced a marriage of " << getSuitString(suit);
-	int points = (suit == round.trump) ? 40 : 20;
+	int points = (suit == round.trump) ? game.settings.trumpMarriagePoints : game.settings.nonTrumpMarriagePoints;
 	std::cout << " (+" << points << " points)" << std::endl;
 
 	std::cout << "Now you must play either: ";
@@ -275,7 +355,7 @@ void infoCommand(Game& game)
 	Round& round = getCurrentRound(game);
 
 	std::cout << "Current Round Info:" << std::endl;
-	printRoundInfo(round);
+	printRoundInfo(game, round);
 
 	printSeparatingLine();
 

@@ -112,7 +112,7 @@ bool marriageCheck(Player& player, const Card& playedCard)
 	player.hasMarriage = false;
 }
 
-bool playCard(Round& round, Player& player, int cardIndex)
+bool playCard(Game& game, Round& round, Player& player, int cardIndex)
 {
 	if (cardIndex < 0 || cardIndex >= player.hand.cardCount)
 	{
@@ -179,12 +179,12 @@ bool playCard(Round& round, Player& player, int cardIndex)
 		std::cout << std::endl;
 		std::cout << std::endl;
 
-		winner->currentRoundPoints += points;
+		winner->currentPoints += points;
 		
 		round.lastTrick = currentTrick;
 		round.currentTrick = {};
 
-		if (!round.isClosed && round.deck.topCardIndex < MAX_DECK_SIZE)
+		if (!round.isClosed && round.deck.topCardIndex < MAX_DECK_SIZE - 1)
 		{
 			Card c1 = round.deck.cards[round.deck.topCardIndex++];
 			addCardToHand(*winner, c1, &round.trump);
@@ -194,9 +194,12 @@ bool playCard(Round& round, Player& player, int cardIndex)
 		}
 		else if (winner->hand.cardCount == 0)
 		{
-			winner->currentRoundPoints += 10;
-			std::cout << "Last hand for " << winner->name << " (+10 points)" << std::endl << std::endl;
-			return false;
+			if (game.settings.lastTrickBonusPoints)
+			{
+				winner->currentPoints += 10;
+				std::cout << "Last hand for " << winner->name << " (+10 points)" << std::endl << std::endl;
+				return false;
+			}
 		}
 
 		winner->isLeading = true;
