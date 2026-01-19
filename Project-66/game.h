@@ -4,10 +4,10 @@
 #include "player.h"
 
 enum class GameStatus {
-	NOT_STARTED,
-	IN_BETWEEN_ROUNDS,
-	IN_ROUND,
-	ENDED
+	NOT_STARTED = 1,
+	IN_BETWEEN_ROUNDS = 2,
+	IN_ROUND = 3,
+	ENDED = 4
 };
 
 enum class GameSettingsType {
@@ -30,7 +30,7 @@ struct RoundsHistory {
 	size_t size = 0;
 };
 
-struct Game {
+struct Game { 
 	Player player1, player2;
 	GameSettings settings;
 	RoundsHistory roundsHistory;

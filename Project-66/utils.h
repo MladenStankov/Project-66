@@ -9,6 +9,8 @@ void swapCards(Card& c1, Card& c2);
 // Compares two strings until it reaches null ptr or a whitespace
 bool compareWords(const char* str1, const char* str2);
 
+void strCopy(char* dest, const char* src);
+
 // Removes all unnecessary whitespaces from a string and makes all alpha characters lowercase
 void cleanString(char* str);
 

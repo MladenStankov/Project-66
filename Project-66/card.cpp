@@ -18,6 +18,7 @@ const char* getRankString(const Rank& rank)
 			return "King";
 		case Rank::ACE:
 			return "Ace";
+		default: return "Error";
 	}
 }
 
@@ -33,6 +34,7 @@ const char* getSuitString(const Suit& suit)
 		return HEARTS_SYMBOL;
 	case Suit::SPADES:
 		return SPADES_SYMBOL;
+	default: return "Error";
 	}
 }
 

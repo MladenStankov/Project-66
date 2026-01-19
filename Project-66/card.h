@@ -11,10 +11,10 @@ constexpr unsigned int TOTAL_RANKS = 6;
 
 // Playing cards French-Suit
 enum class Suit {
-    CLUBS,
-    DIAMONDS,
-    HEARTS,
-    SPADES,
+    CLUBS=1,
+    DIAMONDS=2,
+    HEARTS=3,
+    SPADES=4,
 };
 
 // Eligible card ranks for game 66

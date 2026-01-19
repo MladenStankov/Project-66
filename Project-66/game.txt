@@ -1,0 +1,73 @@
+{
+	"settings": {
+		"status": 2,
+		"target_points": 11,
+		"non_trump_marriage": 20,
+		"trump_marriage": 40,
+		"show_points": false,
+		"last_trick_bonus": true
+	}
+,
+	"player1": 	{
+		"name": "Player1",
+		"current_points": 0,
+		"game_points": 0,
+		"is_leading": true,
+		"played_this_turn": false,
+		"has_marriage": false,
+		"marriage_suit": 0,
+		"hand_card_count": 6,
+		"hand": [{"suit": 3, "rank": 9}, {"suit": 0, "rank": 11}, {"suit": 0, "rank": 13}, {"suit": 3, "rank": 14}, {"suit": 2, "rank": 11}, {"suit": 2, "rank": 13}]
+	}
+,
+	"player2": 	{
+		"name": "Player2",
+		"current_points": 0,
+		"game_points": 0,
+		"is_leading": false,
+		"played_this_turn": false,
+		"has_marriage": false,
+		"marriage_suit": 0,
+		"hand_card_count": 6,
+		"hand": [{"suit": 2, "rank": 10}, {"suit": 1, "rank": 9}, {"suit": 1, "rank": 11}, {"suit": 1, "rank": 12}, {"suit": 1, "rank": 10}, {"suit": 1, "rank": 14}]
+	}
+,
+	"rounds_history": {
+		"size": 1,
+		"history": [
+		{
+			"status": 1,
+			"trump": 3,
+			"bottom_card": {"suit": 3, "rank": 12},
+			"is_closed": false,
+			"player_who_closed": null,
+			"deck_top_index": 12,
+			"deck_cards": [{"suit": 0, "rank": 13}, {"suit": 0, "rank": 11}, {"suit": 2, "rank": 11}, {"suit": 1, "rank": 9}, {"suit": 1, "rank": 12}, {"suit": 2, "rank": 10}, {"suit": 3, "rank": 9}, {"suit": 2, "rank": 13}, {"suit": 3, "rank": 14}, {"suit": 1, "rank": 14}, {"suit": 1, "rank": 10}, {"suit": 1, "rank": 11}, {"suit": 0, "rank": 14}, {"suit": 1, "rank": 13}, {"suit": 2, "rank": 14}, {"suit": 0, "rank": 12}, {"suit": 2, "rank": 9}, {"suit": 3, "rank": 11}, {"suit": 3, "rank": 10}, {"suit": 0, "rank": 10}, {"suit": 0, "rank": 9}, {"suit": 3, "rank": 13}, {"suit": 2, "rank": 12}, {"suit": 3, "rank": 12}],
+			"current_trick": {
+				"lead_card": null,
+				"non_lead_card": null,
+				"lead_player": null,
+				"non_lead_player": null,
+				"winner": null
+			}
+,
+			"last_trick": {
+				"lead_card": null,
+				"non_lead_card": null,
+				"lead_player": null,
+				"non_lead_player": null,
+				"winner": null
+			}
+,
+			"conclusion": {
+				"winner": null,
+				"loser": null,
+				"accumulated_points": 0,
+				"winner_points": 0,
+				"loser_points": 0
+			}
+		}
+		]
+	}
+
+}

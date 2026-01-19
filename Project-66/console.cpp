@@ -4,6 +4,7 @@
 #include "utils.h"
 #include "round.h"
 #include "game.h"
+#include "files.h"
 
 bool getSuit(char* str, Suit& suit)
 {
@@ -463,6 +464,49 @@ void surrenderForeverCommand(Game& game)
 	std::cout << gameWinner.name << " wins the whole game. Congratulations!" << std::endl;
 }
 
+void saveCommand(Game& game, char* command)
+{
+	if (game.status != GameStatus::IN_BETWEEN_ROUNDS && game.status != GameStatus::IN_ROUND)
+	{
+		std::cout << "Game must be started, in order to save" << std::endl;
+		return;
+	}
+
+	char* nextArg = getNextWord(command);
+	if (*nextArg == '\0')
+	{
+		std::cout << "Usage: save <file_name>" << std::endl;
+		return;
+	}
+
+	if (saveGame(game, nextArg) == true)
+	{
+		std::cout << "Successfully saved the game to " << nextArg << std::endl;
+	}
+	else
+	{
+		std::cout << "An error occured when saving the game to " << nextArg << std::endl;
+	}
+}
+
+void loadCommand(Game& game, char* command)
+{
+	if (game.status != GameStatus::NOT_STARTED)
+	{
+		std::cout << "Game must not be started, in order to load" << std::endl;
+		return;
+	}
+
+	char* nextArg = getNextWord(command);
+	if (*nextArg == '\0')
+	{
+		std::cout << "Usage: load <file_name>" << std::endl;
+		return;
+	}
+
+	loadGame(game, nextArg);
+}
+
 void processCommand(char* command, Game& game)
 {
 	system("CLS");
@@ -529,21 +573,11 @@ void processCommand(char* command, Game& game)
 	}
 	else if (compareWords(command, "save"))
 	{
-		if (game.status == GameStatus::NOT_STARTED)
-		{
-			std::cout << "Game has not started" << std::endl;
-			return;
-		}
-		//save(game);
+		saveCommand(game, command);
 	}
 	else if (compareWords(command, "load"))
 	{
-		if (game.status != GameStatus::NOT_STARTED)
-		{
-			std::cout << "Game has started" << std::endl;
-			return;
-		}
-		//load(game);
+		loadCommand(game, command);
 	}
 	else
 	{

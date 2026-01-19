@@ -38,6 +38,11 @@ bool compareWords(const char* str1, const char* str2)
 	else return false;
 }
 
+void strCopy(char* dest, const char* src)
+{
+    while (src && *src != '\0')*dest++ = *src++;
+}
+
 void cleanString(char* str) {
     if (!str) return;
 
