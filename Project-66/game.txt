@@ -1,6 +1,6 @@
 {
 	"settings": {
-		"status": 2,
+		"status": 3,
 		"target_points": 11,
 		"non_trump_marriage": 20,
 		"trump_marriage": 40,
@@ -10,39 +10,39 @@
 ,
 	"player1": 	{
 		"name": "Player1",
-		"current_points": 0,
+		"current_points": 22,
 		"game_points": 0,
 		"is_leading": true,
 		"played_this_turn": false,
-		"has_marriage": false,
-		"marriage_suit": 0,
+		"has_marriage": true,
+		"marriage_suit": 1,
 		"hand_card_count": 6,
-		"hand": [{"suit": 3, "rank": 9}, {"suit": 0, "rank": 11}, {"suit": 0, "rank": 13}, {"suit": 3, "rank": 14}, {"suit": 2, "rank": 11}, {"suit": 2, "rank": 13}]
+		"hand": [{"suit": 1, "rank": 12}, {"suit": 1, "rank": 13}, {"suit": 1, "rank": 14}, {"suit": 4, "rank": 11}, {"suit": 4, "rank": 12}, {"suit": 4, "rank": 14}]
 	}
 ,
 	"player2": 	{
 		"name": "Player2",
 		"current_points": 0,
-		"game_points": 0,
+		"game_points": 3,
 		"is_leading": false,
 		"played_this_turn": false,
 		"has_marriage": false,
 		"marriage_suit": 0,
 		"hand_card_count": 6,
-		"hand": [{"suit": 2, "rank": 10}, {"suit": 1, "rank": 9}, {"suit": 1, "rank": 11}, {"suit": 1, "rank": 12}, {"suit": 1, "rank": 10}, {"suit": 1, "rank": 14}]
+		"hand": [{"suit": 2, "rank": 14}, {"suit": 1, "rank": 10}, {"suit": 3, "rank": 11}, {"suit": 3, "rank": 10}, {"suit": 3, "rank": 14}, {"suit": 4, "rank": 13}]
 	}
 ,
 	"rounds_history": {
-		"size": 1,
+		"size": 2,
 		"history": [
 		{
-			"status": 1,
-			"trump": 3,
-			"bottom_card": {"suit": 3, "rank": 12},
+			"status": 4,
+			"trump": 4,
+			"bottom_card": {"suit": 4, "rank": 12},
 			"is_closed": false,
 			"player_who_closed": null,
 			"deck_top_index": 12,
-			"deck_cards": [{"suit": 0, "rank": 13}, {"suit": 0, "rank": 11}, {"suit": 2, "rank": 11}, {"suit": 1, "rank": 9}, {"suit": 1, "rank": 12}, {"suit": 2, "rank": 10}, {"suit": 3, "rank": 9}, {"suit": 2, "rank": 13}, {"suit": 3, "rank": 14}, {"suit": 1, "rank": 14}, {"suit": 1, "rank": 10}, {"suit": 1, "rank": 11}, {"suit": 0, "rank": 14}, {"suit": 1, "rank": 13}, {"suit": 2, "rank": 14}, {"suit": 0, "rank": 12}, {"suit": 2, "rank": 9}, {"suit": 3, "rank": 11}, {"suit": 3, "rank": 10}, {"suit": 0, "rank": 10}, {"suit": 0, "rank": 9}, {"suit": 3, "rank": 13}, {"suit": 2, "rank": 12}, {"suit": 3, "rank": 12}],
+			"deck_cards": [{"suit": 4, "rank": 14}, {"suit": 2, "rank": 13}, {"suit": 3, "rank": 12}, {"suit": 3, "rank": 14}, {"suit": 2, "rank": 12}, {"suit": 4, "rank": 10}, {"suit": 1, "rank": 12}, {"suit": 1, "rank": 10}, {"suit": 1, "rank": 9}, {"suit": 3, "rank": 11}, {"suit": 1, "rank": 14}, {"suit": 1, "rank": 13}, {"suit": 3, "rank": 10}, {"suit": 3, "rank": 13}, {"suit": 2, "rank": 11}, {"suit": 4, "rank": 13}, {"suit": 4, "rank": 11}, {"suit": 1, "rank": 11}, {"suit": 3, "rank": 9}, {"suit": 2, "rank": 14}, {"suit": 2, "rank": 9}, {"suit": 2, "rank": 10}, {"suit": 4, "rank": 9}, {"suit": 4, "rank": 12}],
 			"current_trick": {
 				"lead_card": null,
 				"non_lead_card": null,
@@ -57,6 +57,38 @@
 				"lead_player": null,
 				"non_lead_player": null,
 				"winner": null
+			}
+,
+			"conclusion": {
+				"winner": null,
+				"loser": null,
+				"accumulated_points": 3,
+				"winner_points": 0,
+				"loser_points": 0
+			}
+		},
+		{
+			"status": 3,
+			"trump": 2,
+			"bottom_card": {"suit": 2, "rank": 10},
+			"is_closed": false,
+			"player_who_closed": null,
+			"deck_top_index": 16,
+			"deck_cards": [{"suit": 2, "rank": 14}, {"suit": 3, "rank": 14}, {"suit": 1, "rank": 9}, {"suit": 2, "rank": 11}, {"suit": 4, "rank": 12}, {"suit": 3, "rank": 9}, {"suit": 4, "rank": 9}, {"suit": 4, "rank": 13}, {"suit": 3, "rank": 11}, {"suit": 4, "rank": 14}, {"suit": 4, "rank": 11}, {"suit": 1, "rank": 13}, {"suit": 3, "rank": 10}, {"suit": 1, "rank": 12}, {"suit": 1, "rank": 14}, {"suit": 1, "rank": 10}, {"suit": 1, "rank": 11}, {"suit": 2, "rank": 12}, {"suit": 2, "rank": 13}, {"suit": 3, "rank": 13}, {"suit": 4, "rank": 10}, {"suit": 3, "rank": 12}, {"suit": 2, "rank": 9}, {"suit": 2, "rank": 10}],
+			"current_trick": {
+				"lead_card": null,
+				"non_lead_card": null,
+				"lead_player": null,
+				"non_lead_player": null,
+				"winner": null
+			}
+,
+			"last_trick": {
+				"lead_card": {"suit": 1, "rank": 9},
+				"non_lead_card": {"suit": 2, "rank": 11},
+				"lead_player": "Player2",
+				"non_lead_player": "Player1",
+				"winner": "Player1"
 			}
 ,
 			"conclusion": {

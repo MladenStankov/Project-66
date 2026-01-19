@@ -42,7 +42,7 @@ Round& startRound(Game& game)
 	{
 		for (size_t r = 0; r < TOTAL_RANKS; ++r)
 		{
-			currentRound.deck.cards[index].suit = Suit(s);
+			currentRound.deck.cards[index].suit = Suit(s + 1);
 			currentRound.deck.cards[index].rank = Rank(r + 9);
 			index++;
 		}
@@ -74,6 +74,8 @@ Round& startRound(Game& game)
 
 	sortHand(game.player1, currentRound.trump);
 	sortHand(game.player2, currentRound.trump);
+
+	currentRound.status = RoundStatus::STARTED;
 
 	return currentRound;
 }

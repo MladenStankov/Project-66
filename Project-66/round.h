@@ -8,10 +8,10 @@ constexpr size_t MAX_DECK_SIZE = 24;
 struct Game;
 
 enum class RoundStatus {
-	NOT_STARTED,
-	STARTED,
-	IN_MIDDLE,
-	ENDED,
+	NOT_STARTED = 1,
+	STARTED = 2,
+	IN_MIDDLE = 3,
+	ENDED = 4,
 };
 
 struct Trick {
@@ -36,7 +36,7 @@ struct Round {
 	Suit trump;
 	Card bottomCard;
 	Trick lastTrick, currentTrick;
-	RoundStatus status = RoundStatus::STARTED;
+	RoundStatus status = RoundStatus::NOT_STARTED;
 	Player* playerWhoClosed = nullptr;
 	bool isClosed = false;
 

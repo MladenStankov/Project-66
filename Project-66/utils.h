@@ -18,3 +18,4 @@ char* getNextWord(char* str);
 
 int customAtoi(char* str);
 void printSeparatingLine();
+size_t strLen(const char* str);

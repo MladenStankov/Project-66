@@ -26,15 +26,15 @@ const char* getSuitString(const Suit& suit)
 {
 	switch (suit)
 	{
-	case Suit::CLUBS:
-		return CLUBS_SYMBOL;
-	case Suit::DIAMONDS:
-		return DIAMONDS_SYMBOL;
-	case Suit::HEARTS:
-		return HEARTS_SYMBOL;
-	case Suit::SPADES:
-		return SPADES_SYMBOL;
-	default: return "Error";
+		case Suit::CLUBS:
+			return CLUBS_SYMBOL;
+		case Suit::DIAMONDS:
+			return DIAMONDS_SYMBOL;
+		case Suit::HEARTS:
+			return HEARTS_SYMBOL;
+		case Suit::SPADES:
+			return SPADES_SYMBOL;
+		default: return "Error";
 	}
 }
 

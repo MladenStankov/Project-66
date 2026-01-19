@@ -485,7 +485,7 @@ void saveCommand(Game& game, char* command)
 	}
 	else
 	{
-		std::cout << "An error occured when saving the game to " << nextArg << std::endl;
+		std::cout << "An error occurred when saving the game to " << nextArg << std::endl;
 	}
 }
 
@@ -504,7 +504,14 @@ void loadCommand(Game& game, char* command)
 		return;
 	}
 
-	loadGame(game, nextArg);
+	if (loadGame(game, nextArg) == true)
+	{
+		std::cout << "Successfully loaded the game from " << nextArg << std::endl;
+	}
+	else
+	{
+		std::cout << "An error occurred when loading the game from " << nextArg << std::endl;
+	}
 }
 
 void processCommand(char* command, Game& game)

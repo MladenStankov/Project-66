@@ -41,6 +41,7 @@ bool compareWords(const char* str1, const char* str2)
 void strCopy(char* dest, const char* src)
 {
     while (src && *src != '\0')*dest++ = *src++;
+    *dest = '\0';
 }
 
 void cleanString(char* str) {
@@ -101,4 +102,14 @@ int customAtoi(char* str)
 void printSeparatingLine()
 {
 	std::cout << "--------------------------------" << std::endl;
+}
+
+size_t strLen(const char* str)
+{
+    if (!str) return 0;
+    size_t count = 0;
+
+    while (*str++ != '\0')count++;
+
+    return count;
 }
