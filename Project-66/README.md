@@ -22,6 +22,7 @@ This project is a console-based implementation of the popular card game Santase 
 ## Compilation
 
 The project can be compiled using GCC or Visual Studio.
+But use Visual Studio, because when loading files on GCC there is a bug
 
 ### GCC
 

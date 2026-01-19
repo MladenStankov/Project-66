@@ -7,7 +7,7 @@
 *
 * @author Mladen Stankov
 * @idnumber 3MI0600676
-* @compiler GCC
+* @compiler Visual Studio
 *
 * <Implementation of console commands and UI>
 *

@@ -7,7 +7,7 @@
 *
 * @author Mladen Stankov
 * @idnumber 3MI0600676
-* @compiler GCC
+* @compiler Visual Studio
 *
 * <Header file for utility functions>
 *
