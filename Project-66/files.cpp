@@ -1,4 +1,18 @@
-#pragma once
+/**
+*  
+* Solution to course project # 66
+* Introduction to programming course
+* Faculty of Mathematics and Informatics of Sofia University
+* Winter semester 2025/2026
+*
+* @author Mladen Stankov
+* @idnumber 3MI0600676
+* @compiler GCC
+*
+* <Implementation of file saving/loading logic>
+*
+*/
+
 #include "files.h"
 #include "utils.h"
 #include <fstream>
@@ -137,7 +151,7 @@ void saveRoundsHistory(const RoundsHistory& history, std::ofstream& file, int in
 	writeIndent(file, indentLevel + 1);
 	file << "\"history\": [" << std::endl;
 
-	for (size_t i = 0; i < history.size; i++)
+	for (int i = 0; i < history.size; i++)
 	{
 		const Round& r = history.history[i];
 		writeIndent(file, indentLevel + 1);
@@ -181,7 +195,7 @@ void saveRoundsHistory(const RoundsHistory& history, std::ofstream& file, int in
 		
 		if(r.status != RoundStatus::NOT_STARTED)
 		{
-			for (size_t j = 0; j < MAX_DECK_SIZE; j++)
+			for (int j = 0; j < MAX_DECK_SIZE; j++)
 			{
 				file << "{\"suit\": " << (int)r.deck.cards[j].suit << ", \"rank\": " << (int)r.deck.cards[j].rank << "}";
 				if (j < MAX_DECK_SIZE - 1)
@@ -290,7 +304,7 @@ bool matchLiteral(std::ifstream& file, const char* str)
 {
 	skipWhitespace(file);
 	std::streampos pos = file.tellg();
-	for (size_t i = 0; str[i] != '\0'; ++i)
+	for (int i = 0; str[i] != '\0'; ++i)
 	{
 		if (file.get() != str[i])
 		{
@@ -312,7 +326,7 @@ bool matchKey(std::ifstream& file, const char* key)
 		return false; 
 	}
 	
-	for (size_t i = 0; key[i] != '\0'; ++i)
+	for (int i = 0; key[i] != '\0'; ++i)
 	{
 		if (file.get() != key[i])
 		{
@@ -431,7 +445,7 @@ void loadPlayer(Player& player, std::ifstream& file)
 	matchKey(file, "hand");
 	matchLiteral(file, "[");
 	
-	for (size_t i = 0; i < player.hand.cardCount; i++)
+	for (int i = 0; i < player.hand.cardCount; i++)
 	{
 		loadCard(player.hand.hand[i], file);
 	}

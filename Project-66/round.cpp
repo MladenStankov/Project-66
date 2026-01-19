@@ -1,3 +1,17 @@
+/**
+*  
+* Solution to course project # 66
+* Introduction to programming course
+* Faculty of Mathematics and Informatics of Sofia University
+* Winter semester 2025/2026
+*
+* @author Mladen Stankov
+* @idnumber 3MI0600676
+* @compiler GCC
+*
+* <Implementation of Round logic>
+*
+*/
 #include "round.h"
 #include "utils.h"
 #include "card.h"
@@ -11,12 +25,12 @@ void initialDeal(Round& round, Game& game)
 
 	for (int i = 0; i < 2; ++i)
 	{
-		for (size_t i = 0; i < 3; ++i)
+		for (int i = 0; i < 3; ++i)
 		{
 			addCardToHand(leadingPlayer, round.deck.cards[round.deck.topCardIndex++], nullptr);
 		}
 
-		for (size_t i = 0; i < 3; ++i)
+		for (int i = 0; i < 3; ++i)
 		{
 			addCardToHand(nonLeadingPlayer, round.deck.cards[round.deck.topCardIndex++], nullptr);
 		}
@@ -34,13 +48,13 @@ void shuffleDeck(Deck& deck)
 
 Round& startRound(Game& game)
 {
-	size_t index = 0;
-	size_t roundHistorySize = game.roundsHistory.size;
+	unsigned int index = 0;
+	unsigned int roundHistorySize = game.roundsHistory.size;
 	Round& currentRound = game.roundsHistory.history[roundHistorySize - 1];
 
-	for (size_t s = 0; s < TOTAL_SUITS; ++s)
+	for (int s = 0; s < TOTAL_SUITS; ++s)
 	{
-		for (size_t r = 0; r < TOTAL_RANKS; ++r)
+		for (int r = 0; r < TOTAL_RANKS; ++r)
 		{
 			currentRound.deck.cards[index].suit = Suit(s + 1);
 			currentRound.deck.cards[index].rank = Rank(r + 9);
@@ -133,7 +147,7 @@ void changeRoundState(Round& round, RoundStatus status)
 
 bool switchNine(Round& round, Player& player)
 {
-	size_t index = 0;
+	unsigned int index = 0;
 	if (findCardInHand(player, round.trump, Rank::NINE, index) == true)
 	{
 		swapCards(player.hand.hand[index], round.bottomCard);
@@ -146,7 +160,7 @@ bool switchNine(Round& round, Player& player)
 
 bool announceMarriage(Game& game, Round& round, Player& player, Suit suit)
 {
-	size_t temp;
+	unsigned int temp;
 	if (!findCardInHand(player, suit, Rank::KING, temp) || !findCardInHand(player, suit, Rank::QUEEN, temp))
 		return false;
 
@@ -189,7 +203,7 @@ void createConclusion(Round& round, Player* winner, Player* loser, int accumulat
 	round.conclusion.accumulatedPoints = accumulatedGamePoints;
 }
 
-void printRoundConclusion(const Round& round, size_t roundNumber)
+void printRoundConclusion(const Round& round, unsigned int roundNumber)
 {
 	std::cout << "Round " << roundNumber << " ended." << std::endl;
 	printSeparatingLine();

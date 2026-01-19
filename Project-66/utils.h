@@ -1,3 +1,17 @@
+/**
+*  
+* Solution to course project # 66
+* Introduction to programming course
+* Faculty of Mathematics and Informatics of Sofia University
+* Winter semester 2025/2026
+*
+* @author Mladen Stankov
+* @idnumber 3MI0600676
+* @compiler GCC
+*
+* <Header file for utility functions>
+*
+*/
 #pragma once
 #include "card.h"
 #include "player.h"
@@ -18,4 +32,4 @@ char* getNextWord(char* str);
 
 int customAtoi(char* str);
 void printSeparatingLine();
-size_t strLen(const char* str);
+unsigned int strLen(const char* str);

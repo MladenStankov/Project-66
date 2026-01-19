@@ -1,3 +1,17 @@
+/**
+*  
+* Solution to course project # 66
+* Introduction to programming course
+* Faculty of Mathematics and Informatics of Sofia University
+* Winter semester 2025/2026
+*
+* @author Mladen Stankov
+* @idnumber 3MI0600676
+* @compiler GCC
+*
+* <Implementation of Player logic>
+*
+*/
 #include "player.h"
 #include "card.h"
 #include "game.h"
@@ -38,11 +52,11 @@ void printHand(const Player& player)
 	std::cout << " }";
 }
 
-void removeCardFromHand(Player& player, size_t index)
+void removeCardFromHand(Player& player, unsigned int index)
 {
 	if (index >= player.hand.cardCount) return;
 
-	for (size_t i = index; i < player.hand.cardCount - 1; i++)
+	for (int i = index; i < player.hand.cardCount - 1; i++)
 	{
 		player.hand.hand[i] = player.hand.hand[i + 1];
 	}
@@ -54,7 +68,7 @@ bool strictCheck(Round& round, Player& player, const Card& playedCard)
 {
 	Suit leadSuit = round.currentTrick.leadPlayerCard.suit;
 	bool hasLeadSuit = false;
-	for (size_t i = 0; i < player.hand.cardCount; i++)
+	for (int i = 0; i < player.hand.cardCount; i++)
 	{
 		if (player.hand.hand[i].suit == leadSuit)
 		{
@@ -74,7 +88,7 @@ bool strictCheck(Round& round, Player& player, const Card& playedCard)
 	else
 	{
 		bool hasTrump = false;
-		for (size_t i = 0; i < player.hand.cardCount; i++)
+		for (int i = 0; i < player.hand.cardCount; i++)
 		{
 			if (player.hand.hand[i].suit == round.trump)
 			{
@@ -110,6 +124,7 @@ bool marriageCheck(Player& player, const Card& playedCard)
 		return false;
 	}
 	player.hasMarriage = false;
+	return true;
 }
 
 bool playCard(Game& game, Round& round, Player& player, int cardIndex)
@@ -259,9 +274,9 @@ void sortHand(Player& player, const Suit& trump)
 {
 	if(player.hand.cardCount < 2) return;
 
-	for (size_t i = 0; i < player.hand.cardCount; i++)
+	for (int i = 0; i < player.hand.cardCount; i++)
 	{
-		for (size_t j = 0; j < player.hand.cardCount - 1; j++)
+		for (int j = 0; j < player.hand.cardCount - 1; j++)
 		{
 			Card& c1 = player.hand.hand[j];
 			Card& c2 = player.hand.hand[j + 1];
@@ -291,9 +306,9 @@ void sortHand(Player& player, const Suit& trump)
 	}
 }
 
-bool findCardInHand(Player& player, const Suit& suit, const Rank& rank, size_t& index)
+bool findCardInHand(Player& player, const Suit& suit, const Rank& rank, unsigned int& index)
 {
-	for (size_t i = 0; i < player.hand.cardCount; i++)
+	for (int i = 0; i < player.hand.cardCount; i++)
 	{
 		if (player.hand.hand[i].suit == suit && player.hand.hand[i].rank == rank)
 		{

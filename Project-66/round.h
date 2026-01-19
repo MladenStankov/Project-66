@@ -1,9 +1,23 @@
+/**
+*  
+* Solution to course project # 66
+* Introduction to programming course
+* Faculty of Mathematics and Informatics of Sofia University
+* Winter semester 2025/2026
+*
+* @author Mladen Stankov
+* @idnumber 3MI0600676
+* @compiler GCC
+*
+* <Header file for Round struct and logic>
+*
+*/
 #pragma once
 #include "card.h"
 #include "player.h"
 #include <iostream>
 
-constexpr size_t MAX_DECK_SIZE = 24;
+constexpr unsigned int MAX_DECK_SIZE = 24;
 
 struct Game;
 
@@ -22,7 +36,7 @@ struct Trick {
 
 struct Deck {
 	Card cards[MAX_DECK_SIZE] = {};
-	size_t topCardIndex = 0;
+	unsigned int topCardIndex = 0;
 };
 
 struct RoundConclusion {
@@ -33,7 +47,7 @@ struct RoundConclusion {
 
 struct Round {
 	Deck deck;
-	Suit trump;
+¬	Suit trump;
 	Card bottomCard;
 	Trick lastTrick, currentTrick;
 	RoundStatus status = RoundStatus::NOT_STARTED;

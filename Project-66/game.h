@@ -1,3 +1,17 @@
+/**
+*  
+* Solution to course project # 66
+* Introduction to programming course
+* Faculty of Mathematics and Informatics of Sofia University
+* Winter semester 2025/2026
+*
+* @author Mladen Stankov
+* @idnumber 3MI0600676
+* @compiler GCC
+*
+* <Header file for Game structure>
+*
+*/
 #pragma once
 #include "card.h"
 #include "round.h"
@@ -27,7 +41,7 @@ struct GameSettings {
 
 struct RoundsHistory {
 	Round* history;
-	size_t size = 0;
+	unsigned int size = 0;
 };
 
 struct Game { 

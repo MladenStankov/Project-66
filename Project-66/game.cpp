@@ -1,3 +1,17 @@
+/**
+*  
+* Solution to course project # 66
+* Introduction to programming course
+* Faculty of Mathematics and Informatics of Sofia University
+* Winter semester 2025/2026
+*
+* @author Mladen Stankov
+* @idnumber 3MI0600676
+* @compiler GCC
+*
+* <Implementation of Game structure and logic>
+*
+*/
 #include "game.h"
 #include "utils.h"
 #include "player.h"
@@ -32,7 +46,7 @@ void startGame(Game& game)
 
 void printRoundsHistory(const Game& game)
 {
-    for (size_t i = 0; i < game.roundsHistory.size; i++)
+    for (unsigned int i = 0; i < game.roundsHistory.size; i++)
     {
         Round r = game.roundsHistory.history[i];
         if (r.status == RoundStatus::ENDED)
@@ -75,7 +89,7 @@ Player& getThePlayerThatIsOnTurn(Game& game)
     if (leadingPlayer.playedThisTurn == false) return leadingPlayer;
 
     Player& nonLeadingPlayer = getNonLeadingPlayer(game);
-    if (nonLeadingPlayer.playedThisTurn == false) return nonLeadingPlayer;
+    return nonLeadingPlayer;
 }
 
 void changeGameStatus(Game& game, const GameStatus& status)
@@ -85,7 +99,7 @@ void changeGameStatus(Game& game, const GameStatus& status)
 
 Round& getCurrentRound(Game& game)
 {
-    size_t roundHistorySize = game.roundsHistory.size;
+    unsigned int roundHistorySize = game.roundsHistory.size;
     return game.roundsHistory.history[roundHistorySize - 1];
 }
 

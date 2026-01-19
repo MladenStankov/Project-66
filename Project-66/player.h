@@ -1,16 +1,29 @@
+/**
+*  
+* Solution to course project # 66
+* Introduction to programming course
+* Faculty of Mathematics and Informatics of Sofia University
+* Winter semester 2025/2026
+*
+* @author Mladen Stankov
+* @idnumber 3MI0600676
+* @compiler GCC
+*
+* <Header file for Player struct and related functions>
+*
+*/
 #pragma once
 #include "card.h"
-#include <cstddef>
 
 struct Round;
 
 struct Game;
 
-constexpr size_t MAX_HAND_SIZE = 6;
+constexpr unsigned int MAX_HAND_SIZE = 6;
 
 struct PlayerHand {
 	Card hand[MAX_HAND_SIZE];
-	size_t cardCount;
+	unsigned int cardCount;
 };
 
 struct Player
@@ -30,7 +43,7 @@ struct Player
 Player initPlayer(const char* name);
 
 void addCardToHand(Player& player, Card card, Suit* trump);
-void removeCardFromHand(Player& player, size_t index);
+void removeCardFromHand(Player& player, unsigned int index);
 void printHand(const Player& player);
 
 // Returns false if the deck cards have ended and the round must end.
@@ -40,4 +53,4 @@ bool playCard(Game& game, Round& round, Player& player, int cardIndex);
 // places trump suit first, places cards with same suit in order of power, ascending.
 void sortHand(Player& player, const Suit& trump);
 
-bool findCardInHand(Player& player, const Suit& suit, const Rank& rank, size_t& index);
+bool findCardInHand(Player& player, const Suit& suit, const Rank& rank, unsigned int& index);

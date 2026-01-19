@@ -1,3 +1,17 @@
+/**
+*  
+* Solution to course project # 66
+* Introduction to programming course
+* Faculty of Mathematics and Informatics of Sofia University
+* Winter semester 2025/2026
+*
+* @author Mladen Stankov
+* @idnumber 3MI0600676
+* @compiler GCC
+*
+* <Implementation of utility functions>
+*
+*/
 #include "utils.h"
 #include <iostream>
 #include <cstdlib>
@@ -104,10 +118,10 @@ void printSeparatingLine()
 	std::cout << "--------------------------------" << std::endl;
 }
 
-size_t strLen(const char* str)
+unsigned int strLen(const char* str)
 {
     if (!str) return 0;
-    size_t count = 0;
+    unsigned int count = 0;
 
     while (*str++ != '\0')count++;
 
