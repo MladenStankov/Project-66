@@ -47,7 +47,7 @@ struct RoundConclusion {
 
 struct Round {
 	Deck deck;
-¬	Suit trump;
+	Suit trump;
 	Card bottomCard;
 	Trick lastTrick, currentTrick;
 	RoundStatus status = RoundStatus::NOT_STARTED;
